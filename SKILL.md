@@ -67,6 +67,54 @@ docs/
 
 This structure keeps documents organized by module and makes navigation easy.
 
+## 🔄 New Instruction Response Mechanism
+
+**When boss provides new instructions or feedback**, conduct a comprehensive review:
+
+**After receiving new instructions from boss**:
+
+1. **Identify scope of changes**:
+   - Which modules/systems are affected?
+   - Are changes additions, modifications, or deletions?
+   - Do changes cascade to other systems?
+
+2. **Comprehensive document review**:
+   ```
+   🔍 Conducting comprehensive document review...
+   ```
+   - Read ALL existing design documents
+   - Identify conflicts with new instructions
+   - Mark documents that need updates
+   - Check for logical inconsistencies
+   - Verify alignment with game direction
+
+3. **Impact analysis**:
+   - [ ] List affected documents
+   - [ ] Identify new documents needed
+   - [ ] Identify documents to delete
+   - [ ] Assess impact on implemented code
+   - [ ] Estimate rework scope
+
+4. **Present review findings**:
+   ```
+   📊 Review Summary:
+   - Documents to update: [list]
+   - New documents to create: [list]
+   - Documents to delete: [list]
+   - Code impact: [description]
+
+   Proceed with changes?
+   ```
+
+5. **Execute changes**:
+   - Update version numbers on modified documents
+   - Create new documents as needed
+   - Delete deprecated documents
+   - Update code if implementation phase
+   - Ensure all changes are consistent
+
+**IMPORTANT**: Never implement new instructions in isolation. Always review the full context first to maintain coherence.
+
 ## Workflow Overview
 
 Game development follows this sequential process:
@@ -75,8 +123,9 @@ Game development follows this sequential process:
 2. **Module Breakdown** (Lead Designer) - Decompose vision into modules/systems/gameplay structures
 3. **Game Outline** (Lead Designer) - Create initial game outline document
 4. **Detailed Design** (Designer) - Produce system-specific design documents
-5. **Technical Implementation** (Programmer) - Implement features based on design docs
-6. **Testing & QA** (Tester) - Verify functionality, report bugs, suggest improvements
+5. **Document Review** (Document Supervisor) - Verify logic, coherence, and alignment
+6. **Technical Implementation** (Programmer) - Implement features based on design docs
+7. **Testing & QA** (Tester) - Verify functionality, report bugs, suggest improvements
 
 ## Role Switching
 
@@ -85,6 +134,7 @@ Always indicate the current role explicitly:
 ```
 🎯 Switching to Lead Designer role...
 📝 Switching to Designer role...
+📋 Switching to Document Supervisor role...
 💻 Switching to Programmer role...
 🔍 Switching to Tester role...
 ```
@@ -106,6 +156,28 @@ Always indicate the current role explicitly:
 ```
 
 **IMPORTANT**: Always announce role switches explicitly. Never silently change roles.
+
+### New Instruction Handling
+
+**When boss provides new instructions during any phase**:
+
+1. Pause current work
+2. Switch to appropriate role (usually Lead Designer for direction changes)
+3. Conduct comprehensive review (see "New Instruction Response Mechanism" above)
+4. Present impact analysis
+5. Execute updates across all affected documents
+6. Resume from appropriate phase
+
+**Example**:
+```
+Boss: "Actually, let's add a multiplayer feature"
+
+🎯 Switching to Lead Designer role...
+🔍 Conducting comprehensive document review...
+[Presents impact analysis]
+[Updates all affected documents]
+📝 Switching back to Designer role...
+```
 
 ## Phase 1: Requirements Analysis (Lead Designer)
 
@@ -262,7 +334,132 @@ Before final handoff to Programmer, conduct a technical feasibility review:
 
 This step helps identify technical issues early and avoids rework.
 
-**Present the design doc set** and ask: "所有策划文档已完成，准备移交给程序员，还是需要调整设计？"
+**Present the design doc set** and ask: "所有策划文档已完成，准备进行文档审查，还是需要调整设计？"
+
+## Phase 3.5: Document Review (Document Supervisor)
+
+After Designer completes documentation, switch to Document Supervisor role:
+
+```
+📋 切换到文档监督员角色...
+```
+
+**Document Supervisor responsibilities**:
+
+### Step 1: Comprehensive Document Review
+
+Read ALL design documents in `docs/` recursively and check:
+
+**Logical Consistency**:
+- [ ] No contradictions within or between documents
+- [ ] System interactions are logically sound
+- [ ] Cause-and-effect relationships make sense
+- [ ] Game loops are complete and coherent
+
+**Alignment with Game Direction**:
+- [ ] All systems support the core gameplay
+- [ ] Design choices align with target audience
+- [ ] Feature set matches the game vision
+- [ ] No feature creep or scope drift
+
+**Design Quality**:
+- [ ] Systems are well-integrated
+- [ ] Player experience flows smoothly
+- [ ] Progression is balanced
+- [ ] Feedback loops are clear
+
+**Completeness**:
+- [ ] All required systems have documents
+- [ ] Each document has all required sections
+- [ ] Edge cases are addressed
+- [ ] Error conditions are handled
+
+### Step 2: Identify Issues
+
+Create issue list with severity:
+
+**Critical Issues** (Must fix before implementation):
+- Contradictions between systems
+- Broken gameplay loops
+- Missing critical systems
+- Fundamental design flaws
+
+**Major Issues** (Should fix):
+- Weak integration between systems
+- Unclear player progression
+- Poor balance concerns
+- Incomplete feature sets
+
+**Minor Issues** (Nice to fix):
+- Typos and formatting
+- Minor inconsistencies
+- Could-be-better optimizations
+- Missing details
+
+### Step 3: Issue Resolution
+
+**For critical and major issues**:
+1. Switch to Lead Designer role:
+   ```
+   🎯 Switching to Lead Designer role to discuss issues...
+   ```
+2. Present each issue with explanation
+3. Discuss solutions
+4. Lead Designer updates documents (or delegates to Designer)
+5. Switch back to Document Supervisor to re-review
+
+**For minor issues**:
+- Note in review report
+- Can be addressed during implementation
+
+### Step 4: Approval Decision
+
+After review:
+
+**If critical issues found**:
+- Report: "❌ 发现[数量]个严重问题需要修复"
+- Switch to Lead Designer to resolve
+- Re-review after fixes
+
+**If no critical issues**:
+- Report: "✅ 文档审查通过，发现[数量]个次要问题（可选修复）"
+- Present full review summary
+- Ask: "文档已准备好移交给程序员，还是有其他调整？"
+
+### Step 5: Review Summary Template
+
+```markdown
+# 文档审查报告
+
+## 审查概况
+- 审查系统数量：[数量]
+- 发现问题总数：[数量]
+  - 严重问题：[数量]
+  - 主要问题：[数量]
+  - 次要问题：[数量]
+
+## 问题列表
+### 严重问题
+1. [问题描述] - [影响范围] - [建议修复方案]
+
+### 主要问题
+1. [问题描述] - [影响范围] - [建议修复方案]
+
+### 次要问题
+1. [问题描述] - [建议优化]
+
+## 总体评估
+- ✅ 文档质量：[优秀/良好/一般/需要改进]
+- ✅ 逻辑一致性：[通过/需要改进]
+- ✅ 设计对齐度：[对齐/部分偏差/需要调整]
+
+## 建议
+- [ ] 修复严重问题后重新审查
+- [ ] 修复主要问题后可继续
+- [ ] 次要问题可在实现中优化
+```
+
+**IMPORTANT**: Document Supervisor acts as quality gate before implementation. Never approve documents with critical issues that will cause problems during development.
 
 ## Phase 4: Technical Implementation (Programmer)
 
