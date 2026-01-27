@@ -282,6 +282,32 @@ After outline approval, Lead Designer says:
 
 **Designer works through each module/system** defined in the breakdown:
 
+### ⚠️ CRITICAL CONSTRAINT - Designer Role Limitations
+
+**Designer MUST NOT**:
+- ❌ Write ANY implementation code or code snippets
+- ❌ Include function definitions, class definitions, or algorithms
+- ❌ Write pseudo-code or implementation logic
+- ❌ Suggest specific programming languages or frameworks
+- ❌ Write database schemas or data structures
+- ❌ Include API definitions or interfaces
+
+**Designer MUST**:
+- ✅ Write design specifications and requirements
+- ✅ Describe what needs to be implemented (not how)
+- ✅ Define functional behaviors and interactions
+- ✅ Specify numeric parameters and formulas
+- ✅ Describe UI layouts and visual elements
+- ✅ Document workflows and user flows
+
+**Example**:
+- ❌ Wrong: "Create a `DamageSystem.calculate_damage()` function with code: `def calculate_damage(atk, defense): return max(0, atk - defense)`"
+- ✅ Correct: "伤害计算公式：基础伤害 = max(0, 攻击力 - 防御力)，当触发暴击时伤害翻倍"
+
+**Rationale**: Code implementation is the Programmer's responsibility in Phase 4. Designer focuses on WHAT to build, not HOW to build it.
+
+---
+
 For each system document:
 
 1. Create document in appropriate folder: `docs/模块名/系统名_v1.md`
