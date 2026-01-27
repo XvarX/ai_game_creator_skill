@@ -461,6 +461,410 @@ After review:
 
 **IMPORTANT**: Document Supervisor acts as quality gate before implementation. Never approve documents with critical issues that will cause problems during development.
 
+## Phase 3.6: Build RAG Index (Programmer)
+
+After document review approval, build a RAG (Retrieval-Augmented Generation) index for efficient document access:
+
+```
+💻 切换到程序员角色，构建RAG索引...
+```
+
+**IMPORTANT**: Before building, ask the user to choose the RAG embedding solution:
+
+```
+📊 需要构建RAG索引来优化文档访问（节省80-90% tokens）
+
+请选择Embedding方案：
+
+【方案1：智谱AI Embedding-3】（推荐）
+优点：精度高、中文优化、云服务
+成本：~0.01元/月（15万字文档）
+需要：智谱API密钥
+
+【方案2：Sentence-Transformers】（免费离线）
+优点：完全免费、离线可用、隐私安全
+缺点：精度稍低、需本地计算
+需要：无
+
+选择方案（1/2）：
+```
+
+Wait for user's choice before proceeding with the chosen option's steps.
+
+**Option 1: ZhipuAI Embedding-3 (Recommended)**
+- ✅ **Higher accuracy** - Professional-grade semantic search
+- ✅ **Chinese optimized** - Better understanding of Chinese game design terms
+- ✅ **Cloud-based** - No local computation needed
+- ❌ **Minimal cost** - ~0.01 CNY/month for typical projects
+- Requires: ZhipuAI API key (get free key at https://open.bigmodel.cn/)
+
+**Option 2: Sentence-Transformers (Free & Offline)**
+- ✅ **Completely free** - No API costs whatsoever
+- ✅ **Offline** - Works without internet connection
+- ✅ **Privacy** - All data stays local
+- ❌ **Lower accuracy** - Open-source model (less precise than commercial APIs)
+- ❌ **Local computation** - Requires CPU/memory for embedding
+- No API key needed
+
+Ask: "请选择RAG方案：1) 智谱AI（推荐，精度高，成本<0.01元/月） 2) Sentence-Transformers（免费离线，精度稍低）"
+
+### Step 2: Install Dependencies
+
+Common dependencies for both options:
+```bash
+pip install langchain langchain-community langchain-chroma chromadb python-dotenv
+```
+
+**If Option 1 (ZhipuAI)**:
+```bash
+pip install zai-sdk
+echo "ZHIPUAI_API_KEY=your_key_here" > .env
+```
+
+**If Option 2 (Sentence-Transformers)**:
+```bash
+pip install sentence-transformers
+```
+
+### Step 3: Build RAG Index
+
+Create `scripts/rag_setup.py` based on chosen option:
+
+### Step 3: Build RAG Index
+
+Create `scripts/rag_setup.py` based on chosen option:
+
+**Option 1: ZhipuAI Embedding-3**
+
+```python
+from langchain_chroma import Chroma
+from langchain_text_splitters import MarkdownHeaderTextSplitter
+from langchain_core.documents import Document
+from zai import ZhipuAiClient
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Load documents
+print("[INFO] Loading documents...")
+documents = []
+for filename in os.listdir("docs/"):
+    if filename.endswith('.md'):
+        with open(f"docs/{filename}", 'r', encoding='utf-8') as f:
+            content = f.read()
+        documents.append(Document(page_content=content, metadata={'source': filename}))
+
+print(f"[OK] Loaded {len(documents)} documents")
+
+# Split documents
+text_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=[("#", "##", "###")])
+splits = []
+for doc in documents:
+    docs = text_splitter.split_text(doc.page_content)
+    for split_doc in docs:
+        split_doc.metadata['source'] = doc.metadata.get('source', 'unknown')
+    splits.extend(docs)
+
+print(f"[OK] Split into {len(splits)} chunks")
+
+# Create embeddings with ZhipuAI
+client = ZhipuAiClient(api_key=os.getenv("ZHIPUAI_API_KEY"))
+
+class ZhipuEmbeddings:
+    def __init__(self, client, model="embedding-3", dimensions=1024):
+        self.client = client
+        self.model = model
+        self.dimensions = dimensions
+
+    def embed_documents(self, texts):
+        embeddings = []
+        for i in range(0, len(texts), 64):
+            batch = texts[i:i+64]
+            response = self.client.embeddings.create(
+                model=self.model,
+                input=batch,
+                dimensions=self.dimensions
+            )
+            embeddings.extend([item.embedding for item in response.data])
+        return embeddings
+
+    def embed_query(self, text):
+        response = self.client.embeddings.create(
+            model=self.model,
+            input=[text],
+            dimensions=self.dimensions
+        )
+        return response.data[0].embedding
+
+embeddings = ZhipuEmbeddings(client, dimensions=1024)
+
+# Build vector database
+print("[INFO] Building vector database with ZhipuAI Embedding-3...")
+vectordb = Chroma.from_documents(
+    documents=splits,
+    embedding=embeddings,
+    persist_directory="./chroma_db"
+)
+
+print(f"[SUCCESS] RAG index built with {len(splits)} chunks")
+print(f"Embedding: ZhipuAI Embedding-3 (1024 dimensions)")
+print(f"Cost: ~{len(splits) * 0.5 / 100000:.4f} CNY")
+```
+
+**Option 2: Sentence-Transformers (Free)**
+
+```python
+from langchain_chroma import Chroma
+from langchain_text_splitters import MarkdownHeaderTextSplitter
+from langchain_core.documents import Document
+from sentence_transformers import SentenceTransformer
+import os
+import chromadb
+from chromadb.utils import embedding_functions
+
+# Load documents
+print("[INFO] Loading documents...")
+documents = []
+for filename in os.listdir("docs/"):
+    if filename.endswith('.md'):
+        with open(f"docs/{filename}", 'r', encoding='utf-8') as f:
+            content = f.read()
+        documents.append(Document(page_content=content, metadata={'source': filename}))
+
+print(f"[OK] Loaded {len(documents)} documents")
+
+# Split documents
+text_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=[("#", "##", "###")])
+splits = []
+for doc in documents:
+    docs = text_splitter.split_text(doc.page_content)
+    for split_doc in docs:
+        split_doc.metadata['source'] = doc.metadata.get('source', 'unknown')
+    splits.extend(docs)
+
+print(f"[OK] Split into {len(splits)} chunks")
+
+# Download model (first time only)
+print("[INFO] Loading sentence-transformers model (may take a minute on first run)...")
+model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+
+# Create embeddings
+def embed_documents(texts):
+    return model.encode(texts, convert_to_numpy=True).tolist()
+
+def embed_query(text):
+    return model.encode(text, convert_to_numpy=True).tolist()
+
+embedding_function = embedding_functions.CustomEmbeddingFunction(
+    embedding_function=embed_documents
+)
+
+# Build vector database
+print("[INFO] Building vector database with sentence-transformers...")
+client = chromadb.PersistentClient(path="./chroma_db")
+collection = client.get_or_create_collection(
+    name="docs",
+    embedding_function=embedding_function
+)
+
+ids = [f"doc_{i}" for i in range(len(splits))]
+collection.add(
+    ids=ids,
+    documents=[split.page_content for split in splits],
+    metadatas=[split.metadata for split in splits]
+)
+
+print(f"[SUCCESS] RAG index built with {len(splits)} chunks")
+print(f"Embedding: sentence-transformers (384 dimensions)")
+print(f"Cost: FREE")
+```
+
+Run the script:
+```bash
+python scripts/rag_setup.py
+
+# Expected output:
+# [INFO] Loading documents...
+# [OK] Loaded 25 documents
+# [OK] Split into 187 chunks
+# [INFO] Building vector database...
+# [SUCCESS] RAG index built with 187 chunks
+```
+
+### Step 4: Create Query Helper
+
+Create `scripts/rag_query.py` matching your chosen option:
+
+**Option 1: ZhipuAI Query**
+
+```python
+from langchain_chroma import Chroma
+from zai import ZhipuAiClient
+import os
+import sys
+from dotenv import load_dotenv
+
+load_dotenv()
+
+client = ZhipuAiClient(api_key=os.getenv("ZHIPUAI_API_KEY"))
+
+class ZhipuEmbeddings:
+    def __init__(self, client, dimensions=1024):
+        self.client = client
+        self.dimensions = dimensions
+
+    def embed_query(self, text):
+        response = self.client.embeddings.create(
+            model="embedding-3",
+            input=[text],
+            dimensions=self.dimensions
+        )
+        return response.data[0].embedding
+
+# Load vector database
+embeddings = ZhipuEmbeddings(client)
+vectordb = Chroma(
+    persist_directory="./chroma_db",
+    embedding_function=embeddings
+)
+
+# Query
+query = sys.argv[1] if len(sys.argv) > 1 else "伤害计算"
+docs = vectordb.similarity_search(query, k=3)
+
+# Return results
+for i, doc in enumerate(docs, 1):
+    print(f"=== Chunk {i} from {doc.metadata['source']} ===")
+    print(doc.page_content[:500])
+    print("\n")
+```
+
+**Option 2: Sentence-Transformers Query**
+
+```python
+import chromadb
+from sentence_transformers import SentenceTransformer
+import os
+import sys
+
+# Load model
+print("[INFO] Loading sentence-transformers model...")
+model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+
+# Embedding function
+def embed_query(text):
+    return model.encode(text, convert_to_numpy=True).tolist()
+
+embedding_function = chromadb.utils.embedding_functions.CustomEmbeddingFunction(
+    embedding_function=embed_query
+)
+
+# Load vector database
+print("[INFO] Loading vector database...")
+client = chromadb.PersistentClient(path="./chroma_db")
+collection = client.get_collection(
+    name="docs",
+    embedding_function=embedding_function
+)
+
+# Query
+query = sys.argv[1] if len(sys.argv) > 1 else "伤害计算"
+results = collection.query(
+    query_texts=[query],
+    n_results=3
+)
+
+# Return results
+for i, (doc_id, distance, metadata, document) in enumerate(
+    zip(
+        results['ids'][0],
+        results['distances'][0],
+        results['metadatas'][0],
+        results['documents'][0]
+    ),
+    1
+):
+    print(f"=== Chunk {i} from {metadata['source']} ===")
+    print(document)
+    print("\n")
+```
+
+Usage:
+```bash
+python scripts/rag_query.py "伤害计算公式"
+```
+
+### Step 5: Document RAG Configuration
+
+Create `docs/RAG配置.md` to record which option was chosen:
+
+```markdown
+# RAG Configuration
+
+**Chosen Option**: [Option 1: ZhipuAI / Option 2: Sentence-Transformers]
+
+**Build Date**: YYYY-MM-DD
+
+**Document Count**: X
+**Chunk Count**: Y
+
+**Embedding Model**: [ZhipuAI Embedding-3 / sentence-transformers]
+
+**Cost**: [~0.01 CNY/month / FREE]
+```
+
+### Step 6: Switching Between Options
+
+If you want to switch embedding options later:
+
+**From Option 1 to Option 2**:
+```bash
+# 1. Remove old database
+rm -rf chroma_db/
+
+# 2. Update rag_setup.py and rag_query.py to use sentence-transformers code
+
+# 3. Rebuild index
+python scripts/rag_setup.py
+
+# 4. Update docs/RAG配置.md
+```
+
+**From Option 2 to Option 1**:
+```bash
+# 1. Remove old database
+rm -rf chroma_db/
+
+# 2. Install zai-sdk and get API key
+pip install zai-sdk
+# Add ZHIPUAI_API_KEY to .env
+
+# 3. Update rag_setup.py and rag_query.py to use ZhipuAI code
+
+# 4. Rebuild index
+python scripts/rag_setup.py
+
+# 5. Update docs/RAG配置.md
+```
+
+**Switching is seamless** - the RAG query interface remains the same for both options.
+
+### Step 4: Document RAG Configuration
+
+Create `docs/RAG配置.md` to record which option was chosen using the template from [templates/RAG配置模板.md](templates/RAG配置模板.md).
+
+This helps track:
+- Which embedding solution was selected
+- API key status (if applicable)
+- Document and chunk counts
+- Update history
+- Any future switches between options
+
+**IMPORTANT**: Building RAG index is **optional but highly recommended** for medium to large projects (>10 documents). Small projects can skip this step.
+
+**Reference**: See [references/智谱RAG集成指南.md](references/智谱RAG集成指南.md) for complete guide.
+
 ## Phase 4: Technical Implementation (Programmer)
 
 After design approval, switch to Programmer role:
@@ -468,6 +872,63 @@ After design approval, switch to Programmer role:
 ```
 💻 切换到程序员角色...
 ```
+
+### Efficient Document Access with RAG
+
+**If RAG index was built** (see Phase 3.6), use it for efficient document access:
+
+**Example 1: Programmer implementing damage calculation system**
+
+Instead of reading all documents (150,000 words), use RAG to get only relevant chunks:
+
+```python
+# Query RAG for damage calculation documentation
+import subprocess
+result = subprocess.run([
+    "python", "scripts/rag_query.py",
+    "伤害计算 公式 暴击"
+], capture_output=True, text=True)
+
+# Result: Only 3 relevant chunks (~2,000 words)
+# Note: The document paths below are EXAMPLES - actual docs depend on your project
+# Chunk 1: docs/战斗模块/伤害系统_v1.md (EXAMPLE)
+#   - ## 交互流程
+#   - ## 数值参数
+#   - ## 公式说明
+# Chunk 2: docs/角色模块/属性系统_v1.md (EXAMPLE)
+#   - ## 属性计算
+# Chunk 3: docs/战斗模块/状态系统_v1.md (EXAMPLE)
+#   - ## 暴击机制
+```
+
+**Token Savings**:
+- Traditional: Read 25 documents × 6,000 words = 150,000 words
+- RAG: Retrieve 3 chunks × 700 words = 2,100 words
+- **Saved: 98.6% tokens**
+
+**Example 2: Implementing character progression**
+
+```python
+# Query RAG
+result = subprocess.run([
+    "python", "scripts/rag_query.py",
+    "等级升级 经验值 属性成长"
+], capture_output=True, text=True)
+
+# Claude reads only the retrieved chunks and implements:
+# - Level up logic
+# - Experience curve
+# - Stat growth formula
+```
+
+**How it works**:
+1. Claude calls `scripts/rag_query.py` with a query
+2. Script returns 3 most relevant document chunks
+3. Claude reads those chunks (not all documents)
+4. Claude implements based on retrieved information
+5. **No LLM is called for generation - only embedding for search**
+
+**When RAG is NOT available**:
 
 Read all design documents in `docs/` recursively. If anything is unclear, communicate with Designer (simulate internal team communication).
 
@@ -511,6 +972,75 @@ After implementation is complete, switch to Tester role:
 ```
 🔍 切换到测试员角色...
 ```
+
+### Efficient Testing with RAG
+
+**If RAG index was built** (see Phase 3.6), use it to quickly locate relevant test requirements:
+
+**Example 1: Testing damage calculation bugs**
+
+Instead of reading all design documents to verify formulas:
+
+```python
+# Query RAG for damage calculation specs
+result = subprocess.run([
+    "python", "scripts/rag_query.py",
+    "伤害 暴击 计算公式"
+], capture_output=True, text=True)
+
+# Result: Specific chunks with formulas
+# Claude can now verify:
+# - Is the damage formula implemented correctly?
+# - Is the crit multiplier correct?
+# - Are edge cases handled?
+```
+
+**Example 2: Testing character progression**
+
+```python
+# Query RAG for progression system
+result = subprocess.run([
+    "python", "scripts/rag_query.py",
+    "升级 经验值 属性成长"
+], capture_output=True, text=True)
+
+# Retrieved chunks show:
+# - Level up requirements
+# - XP curve formula
+# - Stat increases per level
+
+# Tester can verify implementation matches design
+```
+
+**Example 3: Cross-referencing related systems**
+
+```python
+# Check consistency across combat systems
+result = subprocess.run([
+    "python", "scripts/rag_query.py",
+    "战斗 状态效果 buff 机制"
+], capture_output=True, text=True)
+
+# Returns chunks from multiple documents:
+# - Damage system
+# - Status system
+# - Buff mechanics
+
+# Tester can verify:
+# - No contradictions between systems
+# - Consistent terminology
+# - Proper integration
+```
+
+**Benefits for Tester**:
+- ✅ Quick access to design specifications
+- ✅ Verify implementation against requirements
+- ✅ Cross-reference multiple systems efficiently
+- ✅ **90%+ reduction in tokens needed**
+
+**When RAG is NOT available**:
+
+Read all design documents in `docs/` recursively and reference them during testing.
 
 Conduct systematic testing:
 
