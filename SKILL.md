@@ -1,5 +1,5 @@
 ---
-name: game-dev-collaboration
+name: aigame_creator
 description: Professional game development workflow with multi-role collaboration (lead designer, designer, programmer, tester). Use when the user requests game development, creating a new game, or needs to design and implement game systems. Triggered by phrases like "make a game," "create a game," "主策划：[request]" (addressing lead designer), or requests to build/implement game features and mechanics. The skill manages the complete lifecycle from requirements gathering, module breakdown, detailed design documentation, technical implementation, to quality assurance.
 ---
 
