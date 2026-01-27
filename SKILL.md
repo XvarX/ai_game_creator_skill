@@ -272,6 +272,139 @@ Create `docs/游戏大纲_v1.md` using the template from [templates/游戏大纲
 
 Wait for confirmation before proceeding.
 
+## Phase 2.5: Create Project Progress Tracker (Lead Designer)
+
+**CRITICAL**: This progress tracker helps all Claude agents (when switching contexts) quickly understand project status!
+
+```
+📋 创建项目进度追踪表...
+```
+
+Create `PROJECT_PROGRESS.md` in project root:
+
+```markdown
+# 项目进度追踪表
+
+**项目名称**: [从游戏大纲读取]
+**创建日期**: YYYY-MM-DD
+**最后更新**: YYYY-MM-DD
+**当前阶段**: Phase [X]
+
+---
+
+## 📊 整体进度
+
+- [ ] Phase 1: 需求分析 ✅
+- [ ] Phase 2: 模块拆解 ✅
+- [ ] Phase 2.5: 进度追踪表创建 ✅
+- [ ] Phase 2: 游戏大纲 ✅
+- [ ] Phase 3: 详细设计文档 ⏳ (0/XX 完成)
+- [ ] Phase 3.5: 文档审查 ⏳
+- [ ] Phase 3.6: RAG构建 ⏳
+- [ ] Phase 4: 技术实现 ⏳
+- [ ] Phase 5: 质量保证 ⏳
+
+**整体完成度**: [X]%
+
+---
+
+## 📋 模块开发进度
+
+### 核心玩法模块
+- [ ] **需求文档**: 游戏大纲_v1.md ✅
+- [ ] **详细设计**: 核心玩法系统_v1.md ⏳
+- [ ] **技术实现**: ⏳
+- [ ] **测试验证**: ⏳
+
+### 战斗模块
+- [ ] **需求文档**: 模块拆解_v1.md ✅
+- [ ] **详细设计**:
+  - [ ] 伤害系统_v1.md ⏳
+  - [ ] 状态系统_v1.md ⏳
+  - [ ] 技能系统_v1.md ⏳
+- [ ] **技术实现**: ⏳
+- [ ] **测试验证**: ⏳
+
+### 角色模块
+- [ ] **需求文档**: 模块拆解_v1.md ✅
+- [ ] **详细设计**:
+  - [ ] 属性系统_v1.md ⏳
+  - [ ] 成长系统_v1.md ⏳
+  - [ ] 装备系统_v1.md ⏳
+- [ ] **技术实现**: ⏳
+- [ ] **测试验证**: ⏳
+
+### UI/UX模块
+- [ ] **需求文档**: 模块拆解_v1.md ✅
+- [ ] **详细设计**:
+  - [ ] HUD系统_v1.md ⏳
+  - [ ] 菜单系统_v1.md ⏳
+  - [ ] 交互反馈系统_v1.md ⏳
+- [ ] **技术实现**: ⏳
+- [ ] **测试验证**: ⏳
+
+### 数据模块
+- [ ] **需求文档**: 模块拆解_v1.md ✅
+- [ ] **详细设计**:
+  - [ ] 存档系统_v1.md ⏳
+  - [ ] 配置系统_v1.md ⏳
+  - [ ] 统计系统_v1.md ⏳
+- [ ] **技术实现**: ⏳
+- [ ] **测试验证**: ⏳
+
+---
+
+## 🔄 工作流程状态
+
+### 当前阶段
+**Phase**: [当前阶段名称]
+**说明**: [当前阶段的工作内容和目标]
+
+### 待办事项
+- [ ] [任务1]
+- [ ] [任务2]
+- [ ] [任务3]
+
+---
+
+## 📝 更新日志
+
+**YYYY-MM-DD** - Phase 2.5完成
+- 创建项目进度追踪表
+- 完成游戏大纲和模块拆解
+
+**YYYY-MM-DD** - Phase 1-2完成
+- 完成需求分析
+- 完成模块拆解
+```
+
+**Update frequency**:
+- 每完成一个Phase更新一次
+- 每完成一个系统文档更新对应模块状态
+- 每次切换角色前检查此文件
+
+**Usage for Claude agents**:
+1. 新Claude启动时：读取此文件了解项目状态
+2. 角色切换时：检查当前阶段，确认下一步做什么
+3. 继续工作前：确认待办事项，避免遗漏
+
+---
+
+## ⚠️ 重要提醒
+
+- ✅ **所有角色切换前必须先读取此文件**
+- ✅ **完成任何工作后立即更新此文件**
+- ✅ **使用明确的Phase名称和状态标记**
+- ❌ **不要跳过Phase直接进入实现**
+- ❌ **不要在文档未完成时进入下一阶段**
+
+**项目成功的关键**: 遵循Phase顺序，每个阶段完成后再进入下一阶段！
+```
+
+**Key point**: This progress tracker is the SINGLE SOURCE OF TRUTH for project status. All Claude agents MUST read this file first when joining the project!
+
+---
+
 ## Phase 3: Detailed Design Documents (Designer)
 
 After outline approval, Lead Designer says:
@@ -534,7 +667,13 @@ Wait for user's choice before proceeding with the chosen option's steps.
 
 Ask: "请选择RAG方案：1) 智谱AI（推荐，精度高，成本<0.01元/月） 2) Sentence-Transformers（免费离线，精度稍低）"
 
-### Step 2: Install Dependencies
+### Step 2: Create RAG Directory Structure
+
+```bash
+mkdir -p rag/scripts
+```
+
+### Step 3: Install Dependencies
 
 Common dependencies for both options:
 ```bash
@@ -544,7 +683,7 @@ pip install langchain langchain-community langchain-chroma chromadb python-doten
 **If Option 1 (ZhipuAI)**:
 ```bash
 pip install zai-sdk
-echo "ZHIPUAI_API_KEY=your_key_here" > .env
+echo "ZHIPUAI_API_KEY=your_key_here" > rag/.env
 ```
 
 **If Option 2 (Sentence-Transformers)**:
@@ -552,13 +691,13 @@ echo "ZHIPUAI_API_KEY=your_key_here" > .env
 pip install sentence-transformers
 ```
 
+### Step 4: Build RAG Index
+
+Create `rag/scripts/rag_setup.py` based on chosen option:
+
 ### Step 3: Build RAG Index
 
-Create `scripts/rag_setup.py` based on chosen option:
-
-### Step 3: Build RAG Index
-
-Create `scripts/rag_setup.py` based on chosen option:
+Create `rag/scripts/rag_setup.py` based on chosen option:
 
 **Option 1: ZhipuAI Embedding-3**
 
@@ -630,7 +769,7 @@ print("[INFO] Building vector database with ZhipuAI Embedding-3...")
 vectordb = Chroma.from_documents(
     documents=splits,
     embedding=embeddings,
-    persist_directory="./chroma_db"
+    persist_directory="rag/chroma_db"
 )
 
 print(f"[SUCCESS] RAG index built with {len(splits)} chunks")
@@ -688,7 +827,7 @@ embedding_function = embedding_functions.CustomEmbeddingFunction(
 
 # Build vector database
 print("[INFO] Building vector database with sentence-transformers...")
-client = chromadb.PersistentClient(path="./chroma_db")
+client = chromadb.PersistentClient(path="rag/chroma_db")
 collection = client.get_or_create_collection(
     name="docs",
     embedding_function=embedding_function
@@ -708,7 +847,7 @@ print(f"Cost: FREE")
 
 Run the script:
 ```bash
-python scripts/rag_setup.py
+python rag/scripts/rag_setup.py
 
 # Expected output:
 # [INFO] Loading documents...
@@ -720,7 +859,7 @@ python scripts/rag_setup.py
 
 ### Step 4: Create Query Helper
 
-Create `scripts/rag_query.py` matching your chosen option:
+Create `rag/scripts/rag_query.py` matching your chosen option:
 
 **Option 1: ZhipuAI Query**
 
@@ -751,7 +890,7 @@ class ZhipuEmbeddings:
 # Load vector database
 embeddings = ZhipuEmbeddings(client)
 vectordb = Chroma(
-    persist_directory="./chroma_db",
+    persist_directory="rag/chroma_db",
     embedding_function=embeddings
 )
 
@@ -788,7 +927,7 @@ embedding_function = chromadb.utils.embedding_functions.CustomEmbeddingFunction(
 
 # Load vector database
 print("[INFO] Loading vector database...")
-client = chromadb.PersistentClient(path="./chroma_db")
+client = chromadb.PersistentClient(path="rag/chroma_db")
 collection = client.get_collection(
     name="docs",
     embedding_function=embedding_function
@@ -818,10 +957,142 @@ for i, (doc_id, distance, metadata, document) in enumerate(
 
 Usage:
 ```bash
-python scripts/rag_query.py "伤害计算公式"
+python rag/scripts/rag_query.py "伤害计算公式"
 ```
 
-### Step 5: Document RAG Configuration
+### Step 5: Create RAG Keyword Index
+
+**IMPORTANT**: This step solves the "How do programmers know what to query?" problem!
+
+Create `rag/关键词索引.md` to help programmers navigate the documentation efficiently:
+
+```markdown
+# RAG关键词索引 - 项目导航指南
+
+## 项目总览
+
+**项目名称**: [从游戏大纲文档读取]
+**文档总数**: [统计docs/目录下的.md文件数]
+**RAG Chunks**: [从RAG构建输出获取]
+**最后更新**: YYYY-MM-DD
+
+## 快速导航策略
+
+**程序员工作流程**：
+1. 先读总览文档（游戏大纲、模块拆解）了解全局
+2. 查阅本索引，找到相关模块和关键词
+3. 使用RAG查询获取详细需求
+4. 实现功能
+
+## 模块关键词映射
+
+### 核心玩法模块
+**相关文档**: docs/核心玩法模块/
+
+**功能关键词**:
+- 核心机制、核心循环
+- 操作方式、控制方式
+- 玩法目标、胜利条件
+
+**查询示例**:
+```bash
+# 查询核心玩法实现需求
+python rag/scripts/rag_query.py "核心玩法 操作 控制"
+python rag/scripts/rag_query.py "胜利条件 游戏目标"
+```
+
+### 战斗模块
+**相关文档**: docs/战斗模块/
+
+**系统与关键词**:
+1. 伤害系统 → 伤害计算、攻击力、防御力、暴击、命中
+2. 状态系统 → buff、debuff、状态效果、持续时间
+3. 技能系统 → 技能释放、冷却时间、技能效果、技能树
+
+**查询示例**:
+```bash
+# 伤害系统
+python rag/scripts/rag_query.py "伤害计算公式 暴击"
+python rag/scripts/rag_query.py "攻击力 防御力"
+
+# 状态系统
+python rag/scripts/rag_query.py "buff 状态效果 持续时间"
+
+# 技能系统
+python rag/scripts/rag_query.py "技能释放 冷却时间"
+```
+
+### 角色模块
+**相关文档**: docs/角色模块/
+
+**系统与关键词**:
+1. 属性系统 → 攻击、防御、生命值、暴击率、闪避
+2. 成长系统 → 等级、经验值、升级曲线、属性成长
+3. 装备系统 → 装备栏、装备类型、属性加成
+
+**查询示例**:
+```bash
+# 属性系统
+python rag/scripts/rag_query.py "角色属性 攻击 防御"
+python rag/scripts/rag_query.py "暴击率 闪避"
+
+# 成长系统
+python rag/scripts/rag_query.py "等级升级 经验值"
+```
+
+---
+
+## 使用指南
+
+### 如何使用此索引
+
+**场景1：实现伤害计算功能**
+1. 确认任务：实现伤害计算
+2. 查阅索引：找到"战斗模块 → 伤害系统"
+3. 选择关键词："伤害计算公式 暴击"
+4. 执行RAG查询
+5. 阅读返回的chunks
+6. 实现代码
+
+**场景2：实现角色属性功能**
+1. 确认任务：实现角色属性系统
+2. 查阅索引：找到"角色模块 → 属性系统"
+3. 选择关键词："角色属性 攻击 防御"
+4. 执行RAG查询
+5. 阅读返回的chunks
+6. 实现代码
+
+### 常用查询模板
+
+**按模块查询**:
+- 战斗功能: "战斗 伤害 技能 状态"
+- 角色功能: "角色 属性 成长 装备"
+- UI功能: "UI HUD 菜单 交互"
+- 数据功能: "存档 配置 数据"
+
+**按功能查询**:
+- 计算类: "公式 计算 数值"
+- 流程类: "流程 判定 触发"
+- 界面类: "UI 界面 布局 元素"
+
+---
+
+## 注意事项
+
+- ✅ 本索引提供查询方向，不替代详细文档阅读
+- ✅ 查询时使用多个相关关键词效果更好
+- ✅ 先看总览再查细节，避免盲目查询
+- ❌ 不要只查一个词，尝试组合关键词
+```
+
+**创建方法**:
+```python
+# 从游戏大纲和模块拆解文档中提取信息
+# 从RAG chunks中统计高频关键词
+# 人工整理后生成上述索引文档
+```
+
+### Step 6: Document RAG Configuration
 
 Create `docs/RAG配置.md` to record which option was chosen:
 
@@ -840,19 +1111,19 @@ Create `docs/RAG配置.md` to record which option was chosen:
 **Cost**: [~0.01 CNY/month / FREE]
 ```
 
-### Step 6: Switching Between Options
+### Step 7: Switching Between Options
 
 If you want to switch embedding options later:
 
 **From Option 1 to Option 2**:
 ```bash
 # 1. Remove old database
-rm -rf chroma_db/
+rm -rf rag/chroma_db/
 
 # 2. Update rag_setup.py and rag_query.py to use sentence-transformers code
 
 # 3. Rebuild index
-python scripts/rag_setup.py
+python rag/scripts/rag_setup.py
 
 # 4. Update docs/RAG配置.md
 ```
@@ -860,16 +1131,16 @@ python scripts/rag_setup.py
 **From Option 2 to Option 1**:
 ```bash
 # 1. Remove old database
-rm -rf chroma_db/
+rm -rf rag/chroma_db/
 
 # 2. Install zai-sdk and get API key
 pip install zai-sdk
-# Add ZHIPUAI_API_KEY to .env
+# Add ZHIPUAI_API_KEY to rag/.env
 
-# 3. Update rag_setup.py and rag_query.py to use ZhipuAI code
+# 3. Update rag/scripts/rag_setup.py and rag/scripts/rag_query.py to use ZhipuAI code
 
 # 4. Rebuild index
-python scripts/rag_setup.py
+python rag/scripts/rag_setup.py
 
 # 5. Update docs/RAG配置.md
 ```
@@ -911,7 +1182,7 @@ Instead of reading all documents (150,000 words), use RAG to get only relevant c
 # Query RAG for damage calculation documentation
 import subprocess
 result = subprocess.run([
-    "python", "scripts/rag_query.py",
+    "python", "rag/scripts/rag_query.py",
     "伤害计算 公式 暴击"
 ], capture_output=True, text=True)
 
@@ -937,7 +1208,7 @@ result = subprocess.run([
 ```python
 # Query RAG
 result = subprocess.run([
-    "python", "scripts/rag_query.py",
+    "python", "rag/scripts/rag_query.py",
     "等级升级 经验值 属性成长"
 ], capture_output=True, text=True)
 
@@ -1010,7 +1281,7 @@ Instead of reading all design documents to verify formulas:
 ```python
 # Query RAG for damage calculation specs
 result = subprocess.run([
-    "python", "scripts/rag_query.py",
+    "python", "rag/scripts/rag_query.py",
     "伤害 暴击 计算公式"
 ], capture_output=True, text=True)
 
@@ -1026,7 +1297,7 @@ result = subprocess.run([
 ```python
 # Query RAG for progression system
 result = subprocess.run([
-    "python", "scripts/rag_query.py",
+    "python", "rag/scripts/rag_query.py",
     "升级 经验值 属性成长"
 ], capture_output=True, text=True)
 
@@ -1043,7 +1314,7 @@ result = subprocess.run([
 ```python
 # Check consistency across combat systems
 result = subprocess.run([
-    "python", "scripts/rag_query.py",
+    "python", "rag/scripts/rag_query.py",
     "战斗 状态效果 buff 机制"
 ], capture_output=True, text=True)
 
