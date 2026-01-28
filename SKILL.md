@@ -109,9 +109,21 @@ This structure keeps documents organized by module and makes navigation easy.
 5. **Execute changes**:
    - Update version numbers on modified documents
    - Create new documents as needed
-   - Delete deprecated documents
+   - **Delete deprecated documents** - ⚠️ This is critical! Old documents cause confusion:
+     - RAG may retrieve outdated content
+     - Designer/Programmer may reference wrong version
+     - Waste time implementing deprecated features
    - Update code if implementation phase
    - Ensure all changes are consistent
+
+6. **Update RAG and keyword index** - ⚠️ CRITICAL after document changes:
+   ```bash
+   # Incremental RAG update (if RAG was built)
+   python rag/scripts/rag_update_zhipu.py    # or rag_update_st.py
+
+   # Update keyword index
+   python rag/scripts/update_keyword_index.py
+   ```
 
 **IMPORTANT**: Never implement new instructions in isolation. Always review the full context first to maintain coherence.
 
@@ -1162,12 +1174,194 @@ This helps track:
 
 **Reference**: See [references/智谱RAG集成指南.md](references/智谱RAG集成指南.md) for complete guide.
 
+### Step 8: Handling Document Updates
+
+**⚠️ CRITICAL**: When design documents are updated, RAG index MUST be updated!
+
+**When to update RAG**:
+- After any document modification (version update)
+- After creating new design documents
+- After deleting deprecated documents
+- After any "New Instruction Response" execution
+
+**Why update RAG**:
+- ❌ **Old RAG** → Programmer retrieves outdated specifications → Bug fixes → Wasted time
+- ✅ **Updated RAG** → Programmer always gets latest requirements → Correct implementation
+
+**Incremental Update (Recommended)**:
+
+Instead of full rebuild, use incremental update for 85%+ time savings:
+
+```bash
+# Option 1: ZhipuAI
+python rag/scripts/rag_update_zhipu.py
+
+# Option 2: Sentence-Transformers
+python rag/scripts/rag_update_st.py
+
+# Expected output:
+# [INFO] Scanning documents...
+# [OK] Found 25 markdown files
+# [INFO] Comparing with RAG index...
+# [INFO] Changes detected:
+#   - Added: 2 files
+#   - Modified: 3 files
+#   - Deleted: 1 file
+#   - Unchanged: 19 files
+# [SUCCESS] RAG incrementally updated!
+#   Time saved: ~85% compared to full rebuild
+```
+
+**How Incremental Update Works**:
+1. Scans `docs/` directory and compares with RAG index metadata
+2. Detects added, modified, and deleted files (using mtime + hash)
+3. Only updates changed documents (add/delete/modify operations)
+4. Unchanged documents are skipped
+
+**Full Rebuild (When Necessary)**:
+
+Only do full rebuild in these situations:
+- Switching embedding solutions
+- When >50% of documents have changed
+- Database corruption
+- After very long period (>1 month) without updates
+
+```bash
+# Step 1: Remove old database
+rm -rf rag/chroma_db/
+
+# Step 2: Rebuild index
+python rag/scripts/rag_setup.py
+
+# Step 3: Update docs/RAG配置.md with new metadata
+# Update: Build date, document count, chunk count
+```
+
+**Verification**:
+```bash
+# Query RAG to verify new content is accessible
+python rag/scripts/rag_query.py "[updated_feature_name]"
+```
+
+**Workflow**:
+1. Designer updates documents (v1 → v2)
+2. **IMMEDIATELY run incremental update** ← This step is often forgotten!
+3. **Update keyword index** ← Critical for discoverability!
+4. Programmer queries RAG → Gets v2 content ✅
+5. Implementation proceeds with correct requirements
+
+**Updating Keyword Index**:
+
+After RAG update, the keyword index must also be updated to help programmers discover new/modified documents:
+
+```bash
+# Option 1: Semi-automated update (Recommended)
+python rag/scripts/update_keyword_index.py
+
+# This will:
+# - Detect new/removed documents
+# - Generate updated index template
+# - Prompt you to fill in keywords for new systems
+
+# Option 2: Manual update
+# Edit rag/关键词索引.md directly
+# - Add entries for new documents
+# - Remove entries for deleted documents
+# - Update keywords for modified documents
+```
+
+**Why Keyword Index Matters**:
+- ❌ **Without index update** → New documents exist in RAG but programmers don't know to query them
+- ✅ **With index update** → Programmers can easily discover and query all relevant documents
+
+**Performance Comparison**:
+| Scenario | Full Rebuild | Incremental | Time Saved |
+|----------|-------------|-------------|------------|
+| 1 file changed | ~120s | ~15s | 87.5% |
+| 5 files changed | ~120s | ~45s | 62.5% |
+| 50% files changed | ~120s | ~90s | 25% |
+
 ## Phase 4: Technical Implementation (Programmer)
 
 After design approval, switch to Programmer role:
 
 ```
 💻 切换到程序员角色...
+```
+
+### ⚠️ CRITICAL: Mandatory Document Access Workflow
+
+**FORBIDDEN**:
+- ❌ **NEVER read all documents in `docs/` recursively**
+- ❌ **NEVER use Glob/Read tools to scan all design documents**
+- ❌ **NEVER attempt to "familiarize yourself with all documents"**
+
+**VIOLATION CONSEQUENCES**:
+- Waste 100,000+ tokens reading unnecessary content
+- Hit token limits and fail to complete tasks
+- Slow down implementation significantly
+
+**MANDATORY WORKFLOW** (Follow this exact sequence):
+
+#### Step 1: Understand Project Context (Must Do First)
+
+```bash
+# Read these three files ONLY - no exceptions
+1. PROJECT_PROGRESS.md              # Current phase, task assignments
+2. docs/游戏大纲_v1.md               # Game vision, core features
+3. docs/模块拆解_v1.md                # Module structure, priorities
+```
+
+**Purpose**: Understand the big picture before diving into details
+
+#### Step 2: Identify Specific Task
+
+From PROJECT_PROGRESS.md, identify:
+- Which module/system to implement
+- Current phase status
+- Task dependencies
+
+#### Step 3: Use Keyword Index (Navigation)
+
+```bash
+# Read the keyword index to discover relevant systems
+Read: rag/关键词索引.md
+
+# Find:
+# - Which module contains the system you need
+# - Suggested query keywords
+# - Query examples
+```
+
+#### Step 4: Query RAG for Detailed Requirements
+
+```python
+# Query RAG with targeted keywords ONLY
+import subprocess
+result = subprocess.run([
+    "python", "rag/scripts/rag_query.py",
+    "your targeted keywords here"
+], capture_output=True, text=True)
+
+# Read ONLY the returned chunks (typically 3 chunks, ~2,000 words)
+# DO NOT read the full source documents
+```
+
+#### Step 5: Implement Based on Retrieved Chunks
+
+- Use the retrieved chunks as your ONLY requirement source
+- Implement the feature
+- If information is missing, query RAG again with different keywords
+
+**Workflow Summary**:
+```
+PROJECT_PROGRESS.md + 游戏大纲 + 模块拆解 (全局)
+    ↓
+关键词索引.md (导航)
+    ↓
+RAG查询 (详细需求)
+    ↓
+实现代码
 ```
 
 ### Efficient Document Access with RAG
@@ -1227,7 +1421,29 @@ result = subprocess.run([
 
 **When RAG is NOT available**:
 
-Read all design documents in `docs/` recursively. If anything is unclear, communicate with Designer (simulate internal team communication).
+**Check if RAG exists**:
+```bash
+# Check if RAG index exists
+test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
+```
+
+**If RAG does NOT exist**:
+
+1. **For projects with >5 documents**: MUST build RAG first
+   ```bash
+   python rag/scripts/rag_setup.py
+   python rag/scripts/update_keyword_index.py
+   ```
+   Then proceed with the mandatory workflow above.
+
+2. **For very small projects (≤5 documents ONLY)**: You may read documents selectively
+   - Read docs/游戏大纲_v1.md
+   - Read docs/模块拆解_v1.md
+   - Read ONLY the specific system document you need to implement
+   - DO NOT use Glob to scan all documents
+   - DO NOT read documents unrelated to your current task
+
+**WARNING**: Reading all documents without RAG is prohibited for medium-to-large projects (>10 documents) due to token inefficiency.
 
 Then proceed with implementation:
 
@@ -1269,6 +1485,44 @@ After implementation is complete, switch to Tester role:
 ```
 🔍 切换到测试员角色...
 ```
+
+### ⚠️ CRITICAL: Mandatory Document Access Workflow
+
+**FORBIDDEN**:
+- ❌ **NEVER read all documents in `docs/` recursively**
+- ❌ **NEVER use Glob/Read tools to scan all design documents**
+
+**MANDATORY WORKFLOW**:
+
+#### Step 1: Understand What to Test
+- Read PROJECT_PROGRESS.md to identify completed features
+- Read implementation notes if available
+
+#### Step 2: Use RAG for Test Requirements
+```python
+# Query RAG with targeted keywords
+import subprocess
+result = subprocess.run([
+    "python", "rag/scripts/rag_query.py",
+    "feature you're testing"
+], capture_output=True, text=True)
+
+# Verify implementation against retrieved chunks
+```
+
+#### Step 3: Cross-Reference Systems
+```python
+# Query related systems to check consistency
+result = subprocess.run([
+    "python", "rag/scripts/rag_query.py",
+    "related system keywords"
+], capture_output=True, text=True)
+```
+
+**When RAG is NOT available**:
+- Follow same rules as Programmer (see Phase 4)
+- Build RAG if project has >5 documents
+- For small projects, read only relevant documents selectively
 
 ### Efficient Testing with RAG
 
@@ -1334,10 +1588,6 @@ result = subprocess.run([
 - ✅ Verify implementation against requirements
 - ✅ Cross-reference multiple systems efficiently
 - ✅ **90%+ reduction in tokens needed**
-
-**When RAG is NOT available**:
-
-Read all design documents in `docs/` recursively and reference them during testing.
 
 Conduct systematic testing:
 

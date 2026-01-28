@@ -43,16 +43,37 @@ python scripts/rag_query.py "你的查询关键词"
 
 ### 更新索引
 
+**推荐方法：增量更新（快85%）**
+
 当策划文档更新后：
 ```bash
-# 删除旧索引
-rm -rf chroma_db/
+# 方案1：ZhipuAI
+python rag/scripts/rag_update_zhipu.py
 
-# 重新构建
-python scripts/rag_setup.py
+# 方案2：Sentence-Transformers
+python rag/scripts/rag_update_st.py
 
 # 验证
-python scripts/rag_query.py "测试查询"
+python rag/scripts/rag_query.py "测试查询"
+```
+
+**完全重建（必要时）**
+
+仅在以下情况使用：
+- 切换embedding方案
+- 超过50%文档变更
+- 数据库损坏
+- 长时间未更新（>1个月）
+
+```bash
+# 删除旧索引
+rm -rf rag/chroma_db/
+
+# 重新构建
+python rag/scripts/rag_setup.py
+
+# 验证
+python rag/scripts/rag_query.py "测试查询"
 ```
 
 ## 切换方案记录
