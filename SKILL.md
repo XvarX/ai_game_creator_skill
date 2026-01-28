@@ -78,6 +78,16 @@ These constraints apply to ALL roles and MUST be followed at ALL times.
 **Summary**: Read 3 overview files → Check keyword index → Query RAG for details → Work
 **DO NOT**: Scan all docs → Read everything → Work
 
+**🔧 Encoding Note (IMPORTANT for Windows)**:
+When using RAG queries with Chinese text, always use:
+```python
+import sys
+result = subprocess.run([sys.executable, "rag/scripts/rag_query.py", "关键词"],
+                       capture_output=True, text=True, encoding='utf-8')
+print(result.stdout)  # This prevents encoding issues (乱码)
+```
+If you see garbled text (乱码), use the fallback method shown in examples.
+
 ### Designer: CODE PROHIBITION
 
 **🚨 STRICTLY FORBIDDEN**:
@@ -1419,13 +1429,24 @@ Read: rag/关键词索引.md
 ```python
 # Query RAG with targeted keywords ONLY
 import subprocess
+import sys
+
+# Execute query with proper encoding for Chinese text
 result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
+    sys.executable, "rag/scripts/rag_query.py",
     "your targeted keywords here"
-], capture_output=True, text=True)
+], capture_output=True, text=True, encoding='utf-8')
+
+# If encoding issues occur (Windows), use this alternative:
+# result = subprocess.run([
+#     sys.executable, "rag/scripts/rag_query.py",
+#     "your targeted keywords here"
+# ], capture_output=True)
+# content = result.stdout.decode('utf-8')
 
 # Read ONLY the returned chunks (typically 3 chunks, ~2,000 words)
 # DO NOT read the full source documents
+print(result.stdout)  # This contains the retrieved chunks
 ```
 
 #### Step 5: Implement Based on Retrieved Chunks
@@ -1471,12 +1492,22 @@ Instead of reading all documents (150,000 words), use RAG to get only relevant c
 ```python
 # Query RAG for damage calculation documentation
 import subprocess
+import sys
+
 result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
+    sys.executable, "rag/scripts/rag_query.py",
     "伤害计算 公式 暴击"
-], capture_output=True, text=True)
+], capture_output=True, text=True, encoding='utf-8')
+
+# If encoding issues occur on Windows:
+# result = subprocess.run([
+#     sys.executable, "rag/scripts/rag_query.py",
+#     "伤害计算 公式 暴击"
+# ], capture_output=True)
+# content = result.stdout.decode('utf-8')
 
 # Result: Only 3 relevant chunks (~2,000 words)
+print(result.stdout)
 # Note: The document paths below are EXAMPLES - actual docs depend on your project
 # Chunk 1: docs/战斗模块/伤害系统_v1.md (EXAMPLE)
 #   - ## 交互流程
@@ -1497,11 +1528,22 @@ result = subprocess.run([
 
 ```python
 # Query RAG
-result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
-    "等级升级 经验值 属性成长"
-], capture_output=True, text=True)
+import subprocess
+import sys
 
+result = subprocess.run([
+    sys.executable, "rag/scripts/rag_query.py",
+    "等级升级 经验值 属性成长"
+], capture_output=True, text=True, encoding='utf-8')
+
+# Windows encoding fallback:
+# result = subprocess.run([
+#     sys.executable, "rag/scripts/rag_query.py",
+#     "等级升级 经验值 属性成长"
+# ], capture_output=True)
+# content = result.stdout.decode('utf-8')
+
+print(result.stdout)
 # Claude reads only the retrieved chunks and implements:
 # - Level up logic
 # - Experience curve
@@ -1629,11 +1671,21 @@ VIOLATION = TOKEN WASTE + INCOMPLETE TESTING
 ```python
 # Query RAG with targeted keywords
 import subprocess
-result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
-    "feature you're testing"
-], capture_output=True, text=True)
+import sys
 
+result = subprocess.run([
+    sys.executable, "rag/scripts/rag_query.py",
+    "feature you're testing"
+], capture_output=True, text=True, encoding='utf-8')
+
+# Windows fallback for encoding issues:
+# result = subprocess.run([
+#     sys.executable, "rag/scripts/rag_query.py",
+#     "feature you're testing"
+# ], capture_output=True)
+# content = result.stdout.decode('utf-8')
+
+print(result.stdout)
 # Verify implementation against retrieved chunks
 ```
 
@@ -1641,9 +1693,11 @@ result = subprocess.run([
 ```python
 # Query related systems to check consistency
 result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
+    sys.executable, "rag/scripts/rag_query.py",
     "related system keywords"
-], capture_output=True, text=True)
+], capture_output=True, text=True, encoding='utf-8')
+
+print(result.stdout)
 ```
 
 **When RAG is NOT available**:
@@ -1661,11 +1715,22 @@ Instead of reading all design documents to verify formulas:
 
 ```python
 # Query RAG for damage calculation specs
-result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
-    "伤害 暴击 计算公式"
-], capture_output=True, text=True)
+import subprocess
+import sys
 
+result = subprocess.run([
+    sys.executable, "rag/scripts/rag_query.py",
+    "伤害 暴击 计算公式"
+], capture_output=True, text=True, encoding='utf-8')
+
+# Windows encoding fallback:
+# result = subprocess.run([
+#     sys.executable, "rag/scripts/rag_query.py",
+#     "伤害 暴击 计算公式"
+# ], capture_output=True)
+# content = result.stdout.decode('utf-8')
+
+print(result.stdout)
 # Result: Specific chunks with formulas
 # Claude can now verify:
 # - Is the damage formula implemented correctly?
@@ -1677,11 +1742,22 @@ result = subprocess.run([
 
 ```python
 # Query RAG for progression system
-result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
-    "升级 经验值 属性成长"
-], capture_output=True, text=True)
+import subprocess
+import sys
 
+result = subprocess.run([
+    sys.executable, "rag/scripts/rag_query.py",
+    "升级 经验值 属性成长"
+], capture_output=True, text=True, encoding='utf-8')
+
+# Windows fallback:
+# result = subprocess.run([
+#     sys.executable, "rag/scripts/rag_query.py",
+#     "升级 经验值 属性成长"
+# ], capture_output=True)
+# content = result.stdout.decode('utf-8')
+
+print(result.stdout)
 # Retrieved chunks show:
 # - Level up requirements
 # - XP curve formula
@@ -1695,10 +1771,11 @@ result = subprocess.run([
 ```python
 # Check consistency across combat systems
 result = subprocess.run([
-    "python", "rag/scripts/rag_query.py",
+    sys.executable, "rag/scripts/rag_query.py",
     "战斗 状态效果 buff 机制"
-], capture_output=True, text=True)
+], capture_output=True, text=True, encoding='utf-8')
 
+print(result.stdout)
 # Returns chunks from multiple documents:
 # - Damage system
 # - Status system
