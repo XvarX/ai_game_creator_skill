@@ -177,7 +177,26 @@ your-game-project/
 ```
 
 **Setup steps**:
-1. Copy `rag/scripts/` from this skill to your project's `rag/` directory
+1. Copy `rag/scripts/` from this skill to your project's `rag/` directory:
+
+   **Windows (PowerShell)**:
+   ```powershell
+   mkdir rag\scripts
+   copy C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts\* rag\scripts\
+   ```
+
+   **Windows (cmd)**:
+   ```cmd
+   mkdir rag\scripts
+   xcopy /E /I C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts rag\scripts
+   ```
+
+   **Linux/macOS**:
+   ```bash
+   mkdir -p rag/scripts
+   cp -r ~/.claude/skills/ai_game_creator_skill/rag/scripts/* rag/scripts/
+   ```
+
 2. Run setup script from your **project root**
 3. Vector database (`chroma_db/`) will be auto-created in `rag/`
 

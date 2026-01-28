@@ -209,7 +209,28 @@ your-game-project/
 ```
 
 **设置步骤**：
-1. 从skill复制`rag/scripts/`到项目的`rag/`目录
+1. 从skill复制`rag/scripts/`到项目的`rag/`目录：
+
+   **Windows (PowerShell)**:
+   ```powershell
+   mkdir rag\scripts
+   copy C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts\* rag\scripts\
+   ```
+
+   **Windows (cmd)**:
+   ```cmd
+   mkdir rag\scripts
+   xcopy /E /I C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts rag\scripts
+   ```
+
+   **Linux/macOS**:
+   ```bash
+   mkdir -p rag/scripts
+   cp -r ~/.claude/skills/ai_game_creator_skill/rag/scripts/* rag/scripts/
+   ```
+
+   **注意**：将路径 `C:\Users\YourName\.claude\skills\ai_game_creator_skill` 修改为你实际的skill安装路径。
+
 2. 在**项目根目录**运行构建脚本
 3. 向量数据库（`chroma_db/`）会自动在`rag/`中创建
 

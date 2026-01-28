@@ -232,10 +232,26 @@ your-game-project/
 ### Setup Steps
 
 1. **Copy RAG scripts from skill to your project**:
+
+   **Windows (PowerShell)**:
+   ```powershell
+   mkdir rag\scripts
+   copy C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts\* rag\scripts\
+   ```
+
+   **Windows (cmd)**:
+   ```cmd
+   mkdir rag\scripts
+   xcopy /E /I C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts rag\scripts
+   ```
+
+   **Linux/macOS**:
    ```bash
    mkdir -p rag/scripts
-   cp -r path/to/skill/rag/scripts/* rag/scripts/
+   cp -r ~/.claude/skills/ai_game_creator_skill/rag/scripts/* rag/scripts/
    ```
+
+   **Note**: Adjust the skill path `C:\Users\YourName\.claude\skills\ai_game_creator_skill` to your actual skill location.
 
 2. **Choose embedding option and build**:
 
