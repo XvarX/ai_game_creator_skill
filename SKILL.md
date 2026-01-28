@@ -39,6 +39,69 @@ Ask: "Which mode would you prefer? (Interactive/Auto)"
 - If **Interactive**: Follow standard workflow with confirmations
 - If **Auto**: Use `🚀 Auto Mode enabled` and proceed through all phases without stopping for confirmation
 
+## 🚨 CRITICAL: Role Behavior Constraints
+
+**🚨🚨🚨 READ THIS BEFORE STARTING ANY ROLE 🚨🚨🚨**
+
+These constraints apply to ALL roles and MUST be followed at ALL times.
+
+### Programmer & Tester: STRICT DOCUMENT ACCESS RULES
+
+**🚨 FORBIDDEN ACTIONS**:
+- ❌ **NEVER** use `Glob` to scan all markdown files
+- ❌ **NEVER** use `Read` to recursively read all design documents
+- ❌ **NEVER** attempt to "review all documentation" or "familiarize with all docs"
+- ❌ **NEVER** think "let me check what docs exist before starting"
+
+**⚠️ VIOLATION CONSEQUENCES**:
+- Waste 100,000+ tokens reading unnecessary content
+- Hit token limits and fail to complete tasks
+- Slow down implementation significantly
+- **Violations = Task Failure**
+
+**✅ MANDATORY WORKFLOW** (Programmer & Tester):
+
+```
+1️⃣ Read PROJECT_PROGRESS.md           (Project status & tasks)
+   ↓
+2️⃣ Read docs/游戏大纲_v1.md              (Game vision)
+   ↓
+3️⃣ Read docs/模块拆解_v1.md              (Module structure)
+   ↓
+4️⃣ Read rag/关键词索引.md                (Navigation)
+   ↓
+5️⃣ Use RAG query for specific requirements ONLY
+   ↓
+6️⃣ Complete task based on retrieved chunks
+```
+
+**Summary**: Read 3 overview files → Check keyword index → Query RAG for details → Work
+**DO NOT**: Scan all docs → Read everything → Work
+
+### Designer: CODE PROHIBITION
+
+**🚨 STRICTLY FORBIDDEN**:
+- ❌ **NEVER** write implementation code or code snippets
+- ❌ **NEVER** include function definitions, class definitions, or algorithms
+- ❌ **NEVER** write pseudo-code or implementation logic
+- ❌ **NEVER** suggest specific programming languages or frameworks
+- ❌ **NEVER** write database schemas or data structures
+- ❌ **NEVER** include API definitions or interfaces
+
+**✅ Designer MUST**:
+- ✅ Write design specifications and requirements
+- ✅ Describe WHAT needs to be implemented (not HOW)
+- ✅ Define functional behaviors and interactions
+- ✅ Specify numeric parameters and formulas
+- ✅ Describe UI layouts and visual elements
+- ✅ Document workflows and user flows
+
+**Rationale**: Code implementation is the Programmer's responsibility. Designer focuses on WHAT to build, not HOW to build it.
+
+---
+
+**🚨🚨🚨 THESE CONSTRAINTS ARE MANDATORY - NO EXCEPTIONS 🚨🚨🚨**
+
 ## 📁 Recommended Directory Structure
 
 **When creating project structure**, follow this organization:
@@ -1287,6 +1350,24 @@ After design approval, switch to Programmer role:
 
 ```
 💻 切换到程序员角色...
+
+🚨🚨🚨 CRITICAL WARNING - READ IMMEDIATELY 🚨🚨🚨
+
+YOU ARE PROHIBITED FROM:
+❌ DO NOT use Glob to scan all markdown files
+❌ DO NOT read all documents in docs/ recursively
+❌ DO NOT attempt to "review all documentation"
+
+MANDATORY FIRST STEPS:
+1️⃣ Read PROJECT_PROGRESS.md
+2️⃣ Read docs/游戏大纲_v1.md
+3️⃣ Read docs/模块拆解_v1.md
+4️⃣ Read rag/关键词索引.md
+5️⃣ Use RAG query for specific requirements ONLY
+
+VIOLATION = TOKEN WASTE + TASK FAILURE
+
+🚨🚨🚨 END WARNING - PROCEED WITH CARE 🚨🚨🚨
 ```
 
 ### ⚠️ CRITICAL: Mandatory Document Access Workflow
@@ -1365,6 +1446,21 @@ RAG查询 (详细需求)
 ```
 
 ### Efficient Document Access with RAG
+
+**🚨 STOP! READ THIS BEFORE PROCEEDING 🚨**
+
+**Before doing ANYTHING, verify you have followed the mandatory workflow**:
+- ✅ Read PROJECT_PROGRESS.md?
+- ✅ Read docs/游戏大纲_v1.md?
+- ✅ Read docs/模块拆解_v1.md?
+- ✅ Read rag/关键词索引.md?
+
+**If you answered NO to any above, STOP and go read those files first.**
+
+**DO NOT**:
+- ❌ Use `Glob` to find all .md files
+- ❌ Use `Read` to scan all design documents
+- ❌ Think "let me review all docs first"
 
 **If RAG index was built** (see Phase 3.6), use it for efficient document access:
 
@@ -1445,6 +1541,23 @@ test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
 
 **WARNING**: Reading all documents without RAG is prohibited for medium-to-large projects (>10 documents) due to token inefficiency.
 
+---
+
+**🚨 FINAL REMINDER BEFORE PROCEEDING 🚨**
+
+**You MUST have completed these steps BEFORE implementation**:
+1. ✅ Read PROJECT_PROGRESS.md
+2. ✅ Read docs/游戏大纲_v1.md
+3. ✅ Read docs/模块拆解_v1.md
+4. ✅ Read rag/关键词索引.md
+5. ✅ Used RAG to query specific requirements
+
+**If you skipped ANY of these, STOP and complete them NOW.**
+
+**DO NOT start implementation with "let me check what docs exist"** - this leads to token waste.
+
+---
+
 Then proceed with implementation:
 
 1. **Tech stack selection**
@@ -1484,6 +1597,20 @@ After implementation is complete, switch to Tester role:
 
 ```
 🔍 切换到测试员角色...
+
+🚨🚨🚨 CRITICAL WARNING - READ IMMEDIATELY 🚨🚨🚨
+
+YOU ARE PROHIBITED FROM:
+❌ DO NOT use Glob to scan all markdown files
+❌ DO NOT read all documents in docs/ recursively
+
+MANDATORY FIRST STEPS:
+1️⃣ Read PROJECT_PROGRESS.md
+2️⃣ Use RAG query for test requirements ONLY
+
+VIOLATION = TOKEN WASTE + INCOMPLETE TESTING
+
+🚨🚨🚨 END WARNING - PROCEED WITH CARE 🚨🚨🚨
 ```
 
 ### ⚠️ CRITICAL: Mandatory Document Access Workflow
@@ -1632,6 +1759,11 @@ Load these references when needed:
 5. **Complete documentation** - Design docs must be implementation-ready
 6. **Proactive communication** - Both Lead Designer and Designer should confirm with user when uncertain
 7. **Iterative quality** - Tester feedback drives refinement cycles
+8. **🚨 CRITICAL: Never scan all documents** - Programmer/Tester MUST follow RAG workflow:
+   - ✅ Read 3 overview files (PROJECT_PROGRESS.md + 游戏大纲 + 模块拆解)
+   - ✅ Use RAG queries for specific requirements
+   - ❌ NEVER use Glob/Read to scan all docs
+   - **Violation = Token waste + task failure**
 
 ## Common Patterns
 
@@ -1652,3 +1784,11 @@ Load these references when needed:
 
 **When details are unclear during design:**
 → Designer or Lead Designer should proactively ask user → Get clarification → Continue with design
+
+**When Programmer starts implementation** (CRITICAL - Follow this exact sequence):
+→ Read PROJECT_PROGRESS.md → Read 游戏大纲_v1.md → Read 模块拆解_v1.md → Read 关键词索引.md → Query RAG for specific requirements → Implement based on retrieved chunks ONLY
+→ 🚨 **DO NOT** use Glob/Read to scan all documents → 🚨 **DO NOT** "review all docs first"
+
+**When Tester starts testing**:
+→ Read PROJECT_PROGRESS.md → Query RAG for test requirements → Verify implementation → Cross-reference related systems with RAG queries
+→ 🚨 **DO NOT** read all design documents
