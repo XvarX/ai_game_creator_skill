@@ -264,6 +264,21 @@ python rag/scripts/rag_query_helper.py "关键词"
 ### When to Update RAG
 
 **Critical**: Update RAG after ANY document changes:
+
+**⚠️ Cross-platform solution** (Recommended - works on all platforms):
+```bash
+# Use the Python utility for cross-platform compatibility
+python rag/scripts/rag_utils.py update_zhipu    # ZhipuAI
+python rag/scripts/rag_utils.py update_st       # Sentence-Transformers
+python rag/scripts/rag_utils.py update_index    # Update keyword index
+```
+
+**Or use platform-specific commands**:
+```bash
+# Incremental update (85% faster)
+python rag/scripts/rag_update_zhipu.py    # or rag_update_st.py
+python rag/scripts/update_keyword_index.py
+```
 - Documents modified (version update)
 - New documents created
 - Documents deleted
@@ -276,6 +291,29 @@ python rag/scripts/update_keyword_index.py
 ```
 
 **Full rebuild** (only when switching solutions or >50% changes):
+
+**⚠️ Recommended: Use Python utility (cross-platform)**:
+```bash
+# Works on all platforms!
+python rag/scripts/rag_utils.py clean
+python rag/scripts/rag_utils.py setup_zhipu    # or setup_st
+```
+
+**Or use platform-specific commands**:
+
+**Windows (PowerShell)**:
+```powershell
+Remove-Item -Recurse -Force rag/chroma_db
+python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
+```
+
+**Windows (cmd)**:
+```cmd
+rmdir /S /Q rag\chroma_db
+python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
+```
+
+**Linux/macOS**:
 ```bash
 rm -rf rag/chroma_db/
 python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py

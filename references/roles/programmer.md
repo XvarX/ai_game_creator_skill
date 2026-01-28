@@ -303,9 +303,33 @@ your-game-project/
 
 ## 🔧 When RAG is NOT Available
 
-**Check if RAG exists**:
+**⚠️ Cross-platform solution** (Recommended - works on Windows, Linux, macOS):
+
 ```bash
-# Check if RAG index exists
+# Check if RAG exists
+python rag/scripts/rag_utils.py check
+
+# Build RAG (choose one)
+python rag/scripts/rag_utils.py setup_zhipu    # ZhipuAI
+python rag/scripts/rag_utils.py setup_st       # Sentence-Transformers
+```
+
+**Or use platform-specific commands**:
+
+**Check if RAG exists**:
+
+**Windows (PowerShell)**:
+```powershell
+if (Test-Path rag/chroma_db) { Write-Host "RAG exists" } else { Write-Host "RAG not found" }
+```
+
+**Windows (cmd)**:
+```cmd
+if exist rag\chroma_db (echo RAG exists) else (echo RAG not found)
+```
+
+**Linux/macOS**:
+```bash
 test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
 ```
 

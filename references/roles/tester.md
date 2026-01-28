@@ -86,9 +86,29 @@ print(result.stdout)
 
 ## 🔧 When RAG is NOT Available
 
-**Check if RAG exists**:
+**⚠️ Cross-platform solution** (Recommended):
+
 ```bash
-# Check if RAG index exists
+# Check if RAG exists
+python rag/scripts/rag_utils.py check
+```
+
+**Or use platform-specific commands**:
+
+**Check if RAG exists**:
+
+**Windows (PowerShell)**:
+```powershell
+if (Test-Path rag/chroma_db) { Write-Host "RAG exists" } else { Write-Host "RAG not found" }
+```
+
+**Windows (cmd)**:
+```cmd
+if exist rag\chroma_db (echo RAG exists) else (echo RAG not found)
+```
+
+**Linux/macOS**:
+```bash
 test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
 ```
 

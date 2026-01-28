@@ -101,14 +101,15 @@ ai_game_creator_skill/
 │
 ├── rag/
 │   └── scripts/                # ⭐ RAG脚本
-│       ├── rag_setup_zhipu.py      # 智谱AI构建脚本
-│       ├── rag_setup_st.py         # Sentence-Transformers构建脚本
-│       ├── rag_query.py            # 智谱AI查询脚本
-│       ├── rag_query_st.py         # Sentence-Transformers查询脚本
-│       ├── rag_query_helper.py     # Windows编码修复脚本
-│       ├── rag_update_zhipu.py     # 智谱AI增量更新
-│       ├── rag_update_st.py        # Sentence-Transformers增量更新
-│       └── update_keyword_index.py # 关键词索引更新脚本
+│       ├── rag_utils.py             # ⭐ 跨平台工具（推荐）
+│       ├── rag_setup_zhipu.py        # 智谱AI构建脚本
+│       ├── rag_setup_st.py           # Sentence-Transformers构建脚本
+│       ├── rag_query.py              # 智谱AI查询脚本
+│       ├── rag_query_st.py           # Sentence-Transformers查询脚本
+│       ├── rag_query_helper.py       # Windows编码修复脚本
+│       ├── rag_update_zhipu.py       # 智谱AI增量更新
+│       ├── rag_update_st.py          # Sentence-Transformers增量更新
+│       └── update_keyword_index.py   # 关键词索引更新脚本
 │
 ├── scripts/                    # 工具脚本
 │   └── generate_project_structure.py
@@ -298,6 +299,15 @@ result = subprocess.run([
 
 文档变更后，使用增量更新代替完全重建：
 
+**⚠️ 推荐：使用Python工具（跨平台兼容）**：
+```bash
+# 所有平台通用
+python rag/scripts/rag_utils.py update_zhipu    # 智谱AI
+python rag/scripts/rag_utils.py update_st       # Sentence-Transformers
+python rag/scripts/rag_utils.py update_index    # 更新关键词索引
+```
+
+**或使用平台特定命令**：
 ```bash
 # 增量更新（85%+时间节省）
 python rag/scripts/rag_update_zhipu.py    # 智谱AI
@@ -310,6 +320,33 @@ python rag/scripts/update_keyword_index.py  # 更新关键词索引
 - 新文档创建
 - 文档删除
 - 任何新指令响应执行后
+
+### 🔧 跨平台RAG工具 ⭐
+
+**推荐使用** `rag_utils.py` **跨平台工具**，避免平台特定命令问题：
+
+```bash
+# 检查RAG是否存在
+python rag/scripts/rag_utils.py check
+
+# 删除RAG数据库（完全重建前）
+python rag/scripts/rag_utils.py clean
+
+# 构建RAG（选择其一）
+python rag/scripts/rag_utils.py setup_zhipu    # 智谱AI
+python rag/scripts/rag_utils.py setup_st       # Sentence-Transformers（免费）
+
+# 增量更新
+python rag/scripts/rag_utils.py update_zhipu   # 智谱AI
+python rag/scripts/rag_utils.py update_st      # Sentence-Transformers
+python rag/scripts/rag_utils.py update_index   # 更新关键词索引
+```
+
+**优势**：
+- ✅ 在Windows、Linux、macOS上都能工作
+- ✅ 避免Windows cmd/PowerShell命令兼容性问题
+- ✅ 一个命令完成操作，不需要记忆平台特定语法
+- ✅ 不会创建奇怪的文件名（如 `scripts&& cp...`）
 
 ## 📋 相关文档
 
