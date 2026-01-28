@@ -119,6 +119,8 @@ Always announce role switches explicitly:
 
 ## 📁 Recommended Directory Structure
 
+**Design documents structure**:
+
 ```
 docs/
 ├── 游戏大纲_v1.md              # Game outline (Lead Designer)
@@ -137,6 +139,31 @@ docs/
     ├── 核心玩法_v1.md
     └── 辅助玩法_v1.md
 ```
+
+**Implementation code structure** (created by Programmer in Phase 4):
+
+**⚠️ CRITICAL**: Code structure MUST mirror YOUR actual `docs/模块拆解_v1.md`
+
+- ❌ **Do NOT use a fixed template**
+- ✅ **Read `模块拆解_v1.md` and create matching code structure**
+
+```
+code/                           # Created based on YOUR module breakdown
+├── [module-1]/                  # Mirrors each module in docs/模块/
+│   ├── [system-1]/              # Mirrors each system document
+│   └── [system-2]/
+├── [module-2]/
+│   └── [system-3]/
+└── common/                      # Always add shared utilities
+```
+
+**Example**: If `docs/模块/` has:
+- `战斗模块/伤害系统_v1.md`
+- `角色模块/属性系统_v1.md`
+
+Then create:
+- `code/combat/damage/`
+- `code/character/attributes/`
 
 **Version management**:
 - Initial documents: `_v1.md`

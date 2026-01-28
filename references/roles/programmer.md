@@ -183,15 +183,80 @@ Choose appropriate engine/framework based on requirements:
 
 ### Step 3: Architecture Design
 
-- Define code structure (folders, modules, patterns)
+**⚠️ CRITICAL: Code structure MUST mirror YOUR actual `docs/模块拆解_v1.md`**
+
+**Do NOT use a fixed template** - Read your module breakdown and create matching code directories dynamically.
+
+**Step-by-step process**:
+
+1. **Read the actual module breakdown**:
+   ```bash
+   # Find latest version
+   Glob: docs/模块拆解_v*.md
+   # Read the highest version number
+   ```
+
+2. **For each module in breakdown**, create corresponding code directory
+
+3. **For each system under a module**, create subdirectory
+
+**Example - How to map docs to code**:
+
+If your `docs/模块拆解_v1.md` contains:
+```
+模块/
+├── 核心玩法模块/
+│   ├── 核心玩法系统_v1.md
+│   └── 操作控制系统_v1.md
+├── 战斗模块/
+│   ├── 伤害系统_v1.md
+│   └── 状态系统_v1.md
+└── 社交模块/
+    └── 好友系统_v1.md
+```
+
+Create this `code/` structure:
+```
+code/
+├── core/                    # 核心玩法模块 → core/
+│   ├── gameplay/            # 核心玩法系统
+│   └── controls/            # 操作控制系统
+├── combat/                  # 战斗模块 → combat/
+│   ├── damage/              # 伤害系统
+│   └── status/              # 状态系统
+├── social/                  # 社交模块 → social/
+│   └── friends/             # 好友系统
+└── common/                  # Always add (shared utilities)
+    ├── utils/
+    ├── math/
+    └── patterns/
+```
+
+**Mapping rules**:
+- Module name → Directory name (translate Chinese to English if preferred)
+- System name → Subdirectory name
+- Always add `code/common/` for shared utilities
+- Add `code/tests/` for test organization
+
+**⚠️ WRONG**:
+- Using a fixed template without reading `模块拆解_v1.md`
+- Creating directories that don't exist in your design docs
+
+**✅ RIGHT**:
+- Read actual breakdown document
+- Create only the directories that match YOUR modules
+- One-to-one mapping from docs to code
+
 - Plan for scalability
 - Consider performance implications
+- Document architectural decisions
 
 ### Step 4: Implement by Priority
 
-- Start with core gameplay mechanics
-- Then supporting systems
-- Finally, polish and UI
+- Read `docs/模块拆解_v1.md` priority order
+- Start with highest priority systems
+- Follow the EXACT priority order from the breakdown
+- Update PROJECT_PROGRESS.md as you complete each system
 
 ### Step 5: Testing as You Go
 
