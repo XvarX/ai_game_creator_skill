@@ -62,17 +62,23 @@ These constraints apply to ALL roles and MUST be followed at ALL times.
 **✅ MANDATORY WORKFLOW** (Programmer & Tester):
 
 ```
-1️⃣ Read PROJECT_PROGRESS.md           (Project status & tasks)
+1️⃣ Read PROJECT_PROGRESS.md                    (Project status & tasks)
    ↓
-2️⃣ Read docs/游戏大纲_v1.md              (Game vision)
+2️⃣ Read docs/游戏大纲_v*.md (latest version)   (Game vision)
    ↓
-3️⃣ Read docs/模块拆解_v1.md              (Module structure)
+3️⃣ Read docs/模块拆解_v*.md (latest version)   (Module structure)
    ↓
-4️⃣ Read rag/关键词索引.md                (Navigation)
+4️⃣ Read rag/关键词索引.md                       (Navigation)
    ↓
 5️⃣ Use RAG query for specific requirements ONLY
    ↓
 6️⃣ Complete task based on retrieved chunks
+```
+
+**Note**: Document versions change over time (v1 → v2 → v3...). Use `Glob` to find the latest version:
+```bash
+Glob: docs/游戏大纲_v*.md  # Find all versions, use the highest number
+Glob: docs/模块拆解_v*.md  # Find all versions, use the highest number
 ```
 
 **Summary**: Read 3 overview files → Check keyword index → Query RAG for details → Work
@@ -138,7 +144,42 @@ docs/
     └── 辅助玩法_v1.md
 ```
 
+**Note**: Version numbers (_v1, _v2, etc.) will increment as documents are updated. Always use the latest version.
+
 This structure keeps documents organized by module and makes navigation easy.
+
+### 📝 Document Version Management
+
+**Version Numbering Rules**:
+- Initial documents: `_v1.md` (e.g., `伤害系统_v1.md`)
+- First revision: `_v2.md` (e.g., `伤害系统_v2.md`)
+- Subsequent revisions: `_v3.md`, `_v4.md`, etc.
+
+**Critical Rules**:
+1. **Always keep only the latest version** - Delete old versions after updates
+2. **Update references** - When document updates from v1 to v2, update all references
+3. **Use Glob to find latest** - `Glob: docs/游戏大纲_v*.md` → use highest version number
+4. **RAG must be updated** - After document version changes, run incremental RAG update
+
+**Why Delete Old Versions?**
+- ❌ **Multiple versions cause confusion**:
+  - Designer references `伤害系统_v1.md` but latest is `伤害系统_v3.md`
+  - RAG retrieves outdated v1 chunks
+  - Programmer implements deprecated features
+- ✅ **Keep only latest**:
+  - Single source of truth
+  - RAG always retrieves current content
+  - No ambiguity about which version to use
+
+**Finding Latest Version**:
+```bash
+# Use Glob pattern matching (ONLY for specific files, NOT for scanning all docs)
+Glob: docs/游戏大纲_v*.md     # Returns: 游戏大纲_v1.md, 游戏大纲_v2.md
+                               # Use: 游戏大纲_v2.md (highest number)
+
+Glob: docs/模块拆解_v*.md      # Returns: 模块拆解_v1.md, 模块拆解_v2.md
+                               # Use: 模块拆解_v2.md (highest number)
+```
 
 ## 🔄 New Instruction Response Mechanism
 
@@ -180,14 +221,21 @@ This structure keeps documents organized by module and makes navigation easy.
    ```
 
 5. **Execute changes**:
-   - Update version numbers on modified documents
-   - Create new documents as needed
+   - Update version numbers on modified documents (e.g., `伤害系统_v1.md` → `伤害系统_v2.md`)
+   - Create new documents as needed (start with `_v1`)
    - **Delete deprecated documents** - ⚠️ This is critical! Old documents cause confusion:
      - RAG may retrieve outdated content
      - Designer/Programmer may reference wrong version
      - Waste time implementing deprecated features
    - Update code if implementation phase
    - Ensure all changes are consistent
+
+**Version update example**:
+```
+Before: 伤害系统_v1.md
+After update: 伤害系统_v2.md
+Action: Delete 伤害系统_v1.md (keep only latest version)
+```
 
 6. **Update RAG and keyword index** - ⚠️ CRITICAL after document changes:
    ```bash
@@ -324,9 +372,11 @@ docs/
     └── 社交玩法_v1.md
 ```
 
+**Note**: Version numbers (_v1, _v2, etc.) will increment as documents are updated. Start with _v1 for initial documents.
+
 ### Step 3: Output Module Breakdown Document
 
-Create `docs/模块拆解_v1.md` using template from [templates/模块拆解模板.md](templates/模块拆解模板.md)
+Create `docs/模块拆解_v1.md` using template from [templates/模块拆解模板.md](templates/模块拆解模板.md) (use _v1 for initial version)
 
 This document should include:
 - Complete module tree structure
@@ -342,7 +392,7 @@ This document should include:
 
 After module breakdown is approved, create the game outline:
 
-Create `docs/游戏大纲_v1.md` using the template from [templates/游戏大纲模板.md](templates/游戏大纲模板.md)
+Create `docs/游戏大纲_v1.md` using the template from [templates/游戏大纲模板.md](templates/游戏大纲模板.md) (use _v1 for initial version; update to _v2, _v3, etc. for revisions)
 
 **Outline must include:**
 - Game title (working title)
@@ -528,7 +578,7 @@ After outline approval, Lead Designer says:
 
 For each system document:
 
-1. Create document in appropriate folder: `docs/模块名/系统名_v1.md`
+1. Create document in appropriate folder: `docs/模块名/系统名_v1.md` (start with _v1, update to _v2, _v3, etc. for revisions)
 2. Use [templates/策划文档模板.md](templates/策划文档模板.md) format
 3. Include:
    - System overview and goals
@@ -539,6 +589,13 @@ For each system document:
    - Technical requirements
 
 **Document naming format:** `[SystemName]_v[Version].md` (e.g., `伤害系统_v1.md`, `角色属性系统_v2.md`)
+
+**Version Management**:
+- Start with `_v1` for initial documents
+- When updating documents, increment version: `_v1` → `_v2` → `_v3`
+- **IMPORTANT**: Delete old versions after updates (keep only latest version)
+- When referencing documents in this skill, always use the latest version available
+- Use `Glob` pattern matching to find latest version: `docs/游戏大纲_v*.md`
 
 **Work priority**: Follow the priority ranking from module breakdown document.
 
@@ -944,31 +1001,27 @@ python rag/scripts/rag_setup.py
 
 ### Step 4: Create Query Helper
 
-Create `rag/scripts/rag_query.py` matching your chosen option:
+查询脚本已经创建完成（包含Windows中文编码修复）：
 
-**Option 1: ZhipuAI Query**
+**Option 1: ZhipuAI Query** - `rag/scripts/rag_query.py`
+- 已包含Windows控制台UTF-8编码修复
+- 使用ZhipuAI Embedding-3
+- 用法: `python rag/scripts/rag_query.py "查询关键词"`
 
+**Option 2: Sentence-Transformers Query** - `rag/scripts/rag_query_st.py`
+- 已包含Windows控制台UTF-8编码修复
+- 使用Sentence-Transformers（免费离线）
+- 用法: `python rag/scripts/rag_query_st.py "查询关键词"`
+
+**编码修复说明**:
+两个脚本都在开头添加了以下代码来修复Windows中文乱码：
 ```python
-from langchain_chroma import Chroma
-from zai import ZhipuAiClient
-import os
-import sys
-from dotenv import load_dotenv
-
-load_dotenv()
-
-client = ZhipuAiClient(api_key=os.getenv("ZHIPUAI_API_KEY"))
-
-class ZhipuEmbeddings:
-    def __init__(self, client, dimensions=1024):
-        self.client = client
-        self.dimensions = dimensions
-
-    def embed_query(self, text):
-        response = self.client.embeddings.create(
-            model="embedding-3",
-            input=[text],
-            dimensions=self.dimensions
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+```
+这确保了在Windows控制台输出中文时不会出现乱码。
         )
         return response.data[0].embedding
 
@@ -990,55 +1043,11 @@ for i, doc in enumerate(docs, 1):
     print("\n")
 ```
 
-**Option 2: Sentence-Transformers Query**
-
-```python
-import chromadb
-from sentence_transformers import SentenceTransformer
-import os
-import sys
-
-# Load model
-print("[INFO] Loading sentence-transformers model...")
-model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
-
-# Embedding function
-def embed_query(text):
-    return model.encode(text, convert_to_numpy=True).tolist()
-
-embedding_function = chromadb.utils.embedding_functions.CustomEmbeddingFunction(
-    embedding_function=embed_query
-)
-
-# Load vector database
-print("[INFO] Loading vector database...")
-client = chromadb.PersistentClient(path="rag/chroma_db")
-collection = client.get_collection(
-    name="docs",
-    embedding_function=embedding_function
-)
-
-# Query
-query = sys.argv[1] if len(sys.argv) > 1 else "伤害计算"
-results = collection.query(
-    query_texts=[query],
-    n_results=3
-)
-
-# Return results
-for i, (doc_id, distance, metadata, document) in enumerate(
-    zip(
-        results['ids'][0],
-        results['distances'][0],
-        results['metadatas'][0],
-        results['documents'][0]
-    ),
-    1
-):
-    print(f"=== Chunk {i} from {metadata['source']} ===")
-    print(document)
-    print("\n")
-```
+**两个脚本都已包含**:
+- ✅ Windows控制台UTF-8编码修复
+- ✅ 友好的中文提示信息
+- ✅ 错误处理和检查
+- ✅ 输出长度限制（避免滚动过长）
 
 Usage:
 ```bash
@@ -1049,7 +1058,51 @@ python rag/scripts/rag_query.py "伤害计算公式"
 
 **IMPORTANT**: This step solves the "How do programmers know what to query?" problem!
 
-Create `rag/关键词索引.md` to help programmers navigate the documentation efficiently:
+Create `rag/关键词索引.md` to help programmers navigate the documentation efficiently.
+
+⚠️ **CRITICAL**: The keyword index must include strong warnings against reading source documents directly!
+
+**Recommended Approach**: Use the provided template with built-in warnings:
+
+```bash
+# Copy the template (includes all necessary warnings)
+cp templates/关键词索引模板.md rag/关键词索引.md
+
+# Then customize it for your project:
+# - Replace example modules with your actual modules
+# - Add your actual document paths (as reference only)
+# - Update query keywords based on your design
+```
+
+**Template Location**: [templates/关键词索引模板.md](templates/关键词索引模板.md)
+
+**The template includes**:
+- ✅ Explicit warnings NOT to read documents listed in index
+- ✅ Examples of correct vs incorrect usage
+- ✅ Clear workflow guidance (Index → Keywords → RAG → Implement)
+- ✅ Module structure with placeholder content
+- ✅ Query examples for each module
+
+**If creating manually**, ensure you include these critical warnings at the top:
+
+```markdown
+# RAG关键词索引
+
+> **⚠️ IMPORTANT USAGE GUIDELINES ⚠️**
+>
+> **🚨 CRITICAL WARNINGS**:
+> - **DO NOT read any documents listed in this index directly**
+> - **Use this index ONLY to extract keywords for RAG queries**
+> - **Document paths shown below are FOR REFERENCE ONLY**
+>
+> **When RAG returns results showing document paths**, remember:
+> ```
+> [Chunk 1] 来源: docs\模块拆解_v2.md
+> ```
+> This path is **metadata for reference**, NOT an instruction to read that file!
+```
+
+**Example Structure** (customize for your project):
 
 ```markdown
 # RAG关键词索引 - 项目导航指南
@@ -1072,7 +1125,7 @@ Create `rag/关键词索引.md` to help programmers navigate the documentation e
 ## 模块关键词映射
 
 ### 核心玩法模块
-**相关文档**: docs/核心玩法模块/
+**相关文档**: docs/核心玩法模块/ (仅供参考，请勿直接读取)
 
 **功能关键词**:
 - 核心机制、核心循环
@@ -1164,11 +1217,18 @@ python rag/scripts/rag_query.py "等级升级 经验值"
 
 ## 注意事项
 
-- ✅ 本索引提供查询方向，不替代详细文档阅读
+- ✅ 本索引提供查询方向，通过RAG获取内容
 - ✅ 查询时使用多个相关关键词效果更好
 - ✅ 先看总览再查细节，避免盲目查询
+- ✅ 如果RAG返回的信息不够，继续用不同关键词查询
 - ❌ 不要只查一个词，尝试组合关键词
+- ❌ **切勿直接读取索引中列出的文档路径**
+- ❌ **RAG结果显示文档路径时，不要去读取源文档**
+
+**⚠️ CRITICAL**: 此索引仅用于提取关键词，不要读取文档！
 ```
+
+**完整模板**: See [templates/关键词索引模板.md](templates/关键词索引模板.md) for a complete template with all warnings included.
 
 **创建方法**:
 ```python
@@ -1327,6 +1387,27 @@ python rag/scripts/rag_query.py "[updated_feature_name]"
 
 After RAG update, the keyword index must also be updated to help programmers discover new/modified documents:
 
+⚠️ **CRITICAL**: When updating the keyword index, ensure it includes strong warnings against reading source documents directly!
+
+```bash
+# Option 1: Semi-automated update (Recommended)
+python rag/scripts/update_keyword_index.py
+
+# This will:
+# - Detect new/removed documents
+# - Generate updated index template
+# - Prompt you to fill in keywords for new systems
+
+# Option 2: Manual update
+# Edit rag/关键词索引.md directly
+# - Add entries for new documents
+# - Remove entries for deleted documents
+# - Update keywords for modified documents
+# - ENSURE warnings against reading documents are present
+```
+
+**Template with Warnings**: Copy from [templates/关键词索引模板.md](templates/关键词索引模板.md) to ensure all critical warnings are included.
+
 ```bash
 # Option 1: Semi-automated update (Recommended)
 python rag/scripts/update_keyword_index.py
@@ -1367,13 +1448,22 @@ YOU ARE PROHIBITED FROM:
 ❌ DO NOT use Glob to scan all markdown files
 ❌ DO NOT read all documents in docs/ recursively
 ❌ DO NOT attempt to "review all documentation"
+❌ DO NOT read documents listed in keyword index
+❌ DO NOT read documents shown in RAG result paths
 
 MANDATORY FIRST STEPS:
 1️⃣ Read PROJECT_PROGRESS.md
-2️⃣ Read docs/游戏大纲_v1.md
-3️⃣ Read docs/模块拆解_v1.md
+2️⃣ Read docs/游戏大纲_v*.md (find & use latest version)
+3️⃣ Read docs/模块拆解_v*.md (find & use latest version)
 4️⃣ Read rag/关键词索引.md
 5️⃣ Use RAG query for specific requirements ONLY
+
+**To find latest version**:
+```bash
+# Use Glob ONLY for these specific files (NOT for scanning all docs)
+Glob: docs/游戏大纲_v*.md  # Pick highest version number
+Glob: docs/模块拆解_v*.md  # Pick highest version number
+```
 
 VIOLATION = TOKEN WASTE + TASK FAILURE
 
@@ -1398,9 +1488,16 @@ VIOLATION = TOKEN WASTE + TASK FAILURE
 
 ```bash
 # Read these three files ONLY - no exceptions
-1. PROJECT_PROGRESS.md              # Current phase, task assignments
-2. docs/游戏大纲_v1.md               # Game vision, core features
-3. docs/模块拆解_v1.md                # Module structure, priorities
+1. PROJECT_PROGRESS.md                      # Current phase, task assignments
+2. docs/游戏大纲_v*.md (latest version)     # Game vision, core features
+3. docs/模块拆解_v*.md (latest version)     # Module structure, priorities
+```
+
+**How to find latest version**:
+```bash
+# Use Glob ONLY for these specific files (do NOT scan all docs)
+Glob: docs/游戏大纲_v*.md  # e.g., 游戏大纲_v1.md, 游戏大纲_v2.md - use highest number
+Glob: docs/模块拆解_v*.md  # e.g., 模块拆解_v1.md, 模块拆解_v2.md - use highest number
 ```
 
 **Purpose**: Understand the big picture before diving into details
@@ -1422,6 +1519,24 @@ Read: rag/关键词索引.md
 # - Which module contains the system you need
 # - Suggested query keywords
 # - Query examples
+```
+
+⚠️ **CRITICAL WARNING - READ BEFORE PROCEEDING**:
+- ✅ Use the index ONLY to extract keywords for RAG queries
+- ❌ **DO NOT read any documents listed in the index**
+- ❌ **DO NOT attempt to read detailed design documents directly**
+- ❌ **DO NOT use document paths shown in RAG results as an invitation to read them**
+
+**Why This Matters**:
+When RAG returns chunks like `[Chunk 1] 来源: docs\模块拆解_v2.md`, the path is **FOR REFERENCE ONLY**. Do NOT respond with "Let me read the full document from docs\模块拆解_v2.md". Instead:
+- ✅ Query RAG again with different keywords if you need more details
+- ✅ Ask the Designer for clarification if RAG doesn't provide enough information
+- ❌ NEVER read the source document directly
+
+**Common Pitfall to Avoid**:
+```
+❌ WRONG: "RAG showed docs\伤害系统_v2.md, let me read that file"
+✅ RIGHT: "RAG gave me chunks about damage calculation. Let me query for '暴击 伤害 公式' to get more details"
 ```
 
 #### Step 4: Query RAG for Detailed Requirements
@@ -1482,6 +1597,27 @@ RAG查询 (详细需求)
 - ❌ Use `Glob` to find all .md files
 - ❌ Use `Read` to scan all design documents
 - ❌ Think "let me review all docs first"
+- ❌ Read documents just because their paths appear in RAG results
+
+**⚠️ CRITICAL: When RAG Shows Document Paths**
+
+RAG results include metadata like:
+```
+[结果 1/3] 来源: docs\伤害系统_v2.md
+相似度: 0.89
+---
+伤害计算公式：基础伤害 = 攻击力 - 防御力...
+```
+
+**This does NOT mean you should read that document!**
+
+❌ **WRONG RESPONSE**:
+> "Great! RAG found docs\伤害系统_v2.md. Let me read the full document to get all details."
+
+✅ **CORRECT RESPONSE**:
+> "RAG gave me information about damage calculation. If I need more details, I'll query RAG again with different keywords like '暴击 伤害 倍率' or '元素 克制 加成'."
+
+**Key Principle**: RAG results = Content chunks to use directly, NOT a reading list of source documents.
 
 **If RAG index was built** (see Phase 3.6), use it for efficient document access:
 
@@ -1575,8 +1711,8 @@ test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
    Then proceed with the mandatory workflow above.
 
 2. **For very small projects (≤5 documents ONLY)**: You may read documents selectively
-   - Read docs/游戏大纲_v1.md
-   - Read docs/模块拆解_v1.md
+   - Read docs/游戏大纲_v*.md (latest version)
+   - Read docs/模块拆解_v*.md (latest version)
    - Read ONLY the specific system document you need to implement
    - DO NOT use Glob to scan all documents
    - DO NOT read documents unrelated to your current task
@@ -1589,8 +1725,9 @@ test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
 
 **You MUST have completed these steps BEFORE implementation**:
 1. ✅ Read PROJECT_PROGRESS.md
-2. ✅ Read docs/游戏大纲_v1.md
-3. ✅ Read docs/模块拆解_v1.md
+2. ✅ Read docs/游戏大纲_v*.md (latest version)
+3. ✅ Read docs/模块拆解_v*.md (latest version)
+4. ✅ Read rag/关键词索引.md
 4. ✅ Read rag/关键词索引.md
 5. ✅ Used RAG to query specific requirements
 
@@ -1863,7 +2000,7 @@ Load these references when needed:
 → Designer or Lead Designer should proactively ask user → Get clarification → Continue with design
 
 **When Programmer starts implementation** (CRITICAL - Follow this exact sequence):
-→ Read PROJECT_PROGRESS.md → Read 游戏大纲_v1.md → Read 模块拆解_v1.md → Read 关键词索引.md → Query RAG for specific requirements → Implement based on retrieved chunks ONLY
+→ Read PROJECT_PROGRESS.md → Read 游戏大纲_v*.md (latest) → Read 模块拆解_v*.md (latest) → Read 关键词索引.md → Query RAG for specific requirements → Implement based on retrieved chunks ONLY
 → 🚨 **DO NOT** use Glob/Read to scan all documents → 🚨 **DO NOT** "review all docs first"
 
 **When Tester starts testing**:
