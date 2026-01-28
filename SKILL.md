@@ -152,6 +152,35 @@ docs/
 **Problem**: Reading all design documents wastes 100,000+ tokens
 **Solution**: RAG retrieves only relevant chunks (~2,000 words) - **98% token savings**
 
+### RAG Directory Structure
+
+**⚠️ CRITICAL**: Create `rag/` directory in your **project root** (where docs/ and SKILL.md are located):
+
+```
+your-game-project/
+├── docs/                    # Design documents
+├── rag/                     # ⭐ RAG directory (create here)
+│   ├── scripts/             # RAG scripts (from skill)
+│   │   ├── rag_setup_zhipu.py
+│   │   ├── rag_setup_st.py
+│   │   ├── rag_query.py
+│   │   ├── rag_query_st.py
+│   │   ├── rag_query_helper.py
+│   │   ├── rag_update_zhipu.py
+│   │   ├── rag_update_st.py
+│   │   └── update_keyword_index.py
+│   ├── chroma_db/           # Vector database (auto-created)
+│   ├── .env                 # ZhipuAI API key (for ZhipuAI option)
+│   └── 关键词索引.md         # Keyword index (auto-generated)
+├── PROJECT_PROGRESS.md
+└── SKILL.md
+```
+
+**Setup steps**:
+1. Copy `rag/scripts/` from this skill to your project's `rag/` directory
+2. Run setup script from your **project root**
+3. Vector database (`chroma_db/`) will be auto-created in `rag/`
+
 ### RAG Setup Options
 
 Choose based on your needs:
@@ -160,13 +189,39 @@ Choose based on your needs:
 - ✅ High accuracy, Chinese optimized
 - ✅ Cloud-based, no local computation
 - Cost: ~0.01 CNY/month for typical projects
-- Setup: `python rag/scripts/rag_setup_zhipu.py`
+- Setup: Create `rag/.env` with `ZHIPUAI_API_KEY=your_key_here`, then run `python rag/scripts/rag_setup_zhipu.py`
 
 **Option 2: Sentence-Transformers** (Free & Offline)
 - ✅ Completely free, no API costs
 - ✅ Works offline, privacy-focused
 - ❌ Lower accuracy than commercial APIs
-- Setup: `python rag/scripts/rag_setup_st.py`
+- Setup: Run `python rag/scripts/rag_setup_st.py` (first run downloads model)
+
+### ⚠️ CRITICAL: Test RAG After Building
+
+**Immediately after building RAG**, verify it works correctly:
+
+```bash
+# Test query (use a keyword that exists in your docs)
+python rag/scripts/rag_query.py "测试"  # ZhipuAI
+# or
+python rag/scripts/rag_query_st.py "测试"  # Sentence-Transformers
+```
+
+**Check the output**:
+- ✅ If you see **normal Chinese text** → RAG is working correctly
+- ❌ If you see **garbled text (乱码)** → Use the helper script:
+
+```bash
+# Windows encoding fix - use this if you see garbled Chinese
+python rag/scripts/rag_query_helper.py "测试"
+```
+
+**Why this matters**:
+- Windows console may have encoding issues with Chinese
+- The helper script (`rag_query_helper.py`) fixes UTF-8 encoding problems
+- Test immediately after building to catch issues early
+- Don't wait until implementation phase to discover encoding problems
 
 ### RAG Query Workflow
 

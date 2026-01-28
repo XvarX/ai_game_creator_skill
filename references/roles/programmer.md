@@ -201,6 +201,90 @@ Choose appropriate engine/framework based on requirements:
 
 ---
 
+## 🔧 RAG Setup (If Not Already Built)
+
+**⚠️ CRITICAL**: RAG must be built in the **project root** where docs/ are located.
+
+### RAG Directory Structure
+
+Your project should have this structure:
+
+```
+your-game-project/
+├── docs/                    # Design documents
+├── rag/                     # ⭐ RAG directory (create here)
+│   ├── scripts/             # RAG scripts (copy from skill)
+│   │   ├── rag_setup_zhipu.py
+│   │   ├── rag_setup_st.py
+│   │   ├── rag_query.py
+│   │   ├── rag_query_st.py
+│   │   ├── rag_query_helper.py
+│   │   ├── rag_update_zhipu.py
+│   │   ├── rag_update_st.py
+│   │   └── update_keyword_index.py
+│   ├── chroma_db/           # Vector database (auto-created)
+│   ├── .env                 # ZhipuAI API key (for ZhipuAI option)
+│   └── 关键词索引.md         # Keyword index (auto-generated)
+├── PROJECT_PROGRESS.md
+└── SKILL.md
+```
+
+### Setup Steps
+
+1. **Copy RAG scripts from skill to your project**:
+   ```bash
+   mkdir -p rag/scripts
+   cp -r path/to/skill/rag/scripts/* rag/scripts/
+   ```
+
+2. **Choose embedding option and build**:
+
+   **Option 1: ZhipuAI (Recommended)**
+   ```bash
+   # Create API key file
+   echo "ZHIPUAI_API_KEY=your_key_here" > rag/.env
+
+   # Build RAG index
+   python rag/scripts/rag_setup_zhipu.py
+
+   # Generate keyword index
+   python rag/scripts/update_keyword_index.py
+   ```
+
+   **Option 2: Sentence-Transformers (Free)**
+   ```bash
+   # Build RAG index (first run downloads ~400MB model)
+   python rag/scripts/rag_setup_st.py
+
+   # Generate keyword index
+   python rag/scripts/update_keyword_index.py
+   ```
+
+3. **Verify RAG is working and check encoding**:
+   ```bash
+   # Test with a Chinese keyword from your documents
+   python rag/scripts/rag_query.py "伤害"  # ZhipuAI
+   # or
+   python rag/scripts/rag_query_st.py "伤害"  # Sentence-Transformers
+   ```
+
+   **⚠️ CRITICAL: Check output for encoding issues**:
+   - ✅ If you see **normal Chinese text** → RAG is working correctly
+   - ❌ If you see **garbled text (乱码)** like `À×Îö` or `æ± ä»`:
+
+   ```bash
+   # Use the helper script with encoding fix
+   python rag/scripts/rag_query_helper.py "伤害"
+   ```
+
+   **Why this matters**:
+   - Windows console often has UTF-8 encoding issues with Chinese
+   - The helper script fixes encoding problems automatically
+   - Test now to avoid problems during implementation
+   - If encoding is broken, Claude cannot read the retrieved chunks
+
+---
+
 ## 🔧 When RAG is NOT Available
 
 **Check if RAG exists**:
@@ -211,13 +295,7 @@ test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
 
 ### If RAG does NOT exist
 
-1. **For projects with >5 documents**: MUST build RAG first
-   ```bash
-   python rag/scripts/rag_setup.py
-   python rag/scripts/update_keyword_index.py
-   ```
-   Then proceed with the mandatory workflow above.
-
+1. **For projects with >5 documents**: MUST build RAG first (see setup above)
 2. **For very small projects (≤5 documents ONLY)**: You may read documents selectively
    - Read docs/游戏大纲_v*.md (latest version)
    - Read docs/模块拆解_v*.md (latest version)

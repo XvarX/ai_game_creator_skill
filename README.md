@@ -184,6 +184,35 @@ skill会根据以下因素动态评估：
 
 在文档监督员审查通过后、程序员开始实现前，由程序员构建RAG索引。
 
+### RAG目录结构 ⭐
+
+**⚠️ 重要**：RAG必须构建在**项目根目录**（docs/所在位置）：
+
+```
+your-game-project/
+├── docs/                    # 游戏设计文档
+├── rag/                     # ⭐ RAG目录（在这里创建）
+│   ├── scripts/             # RAG脚本（从skill复制）
+│   │   ├── rag_setup_zhipu.py
+│   │   ├── rag_setup_st.py
+│   │   ├── rag_query.py
+│   │   ├── rag_query_st.py
+│   │   ├── rag_query_helper.py
+│   │   ├── rag_update_zhipu.py
+│   │   ├── rag_update_st.py
+│   │   └── update_keyword_index.py
+│   ├── chroma_db/           # 向量数据库（自动创建）
+│   ├── .env                 # 智谱API密钥（仅智谱方案需要）
+│   └── 关键词索引.md         # 关键词索引（自动生成）
+├── PROJECT_PROGRESS.md
+└── SKILL.md
+```
+
+**设置步骤**：
+1. 从skill复制`rag/scripts/`到项目的`rag/`目录
+2. 在**项目根目录**运行构建脚本
+3. 向量数据库（`chroma_db/`）会自动在`rag/`中创建
+
 ### 方案选择
 
 **方案1：智谱AI Embedding-3**（推荐）
@@ -197,6 +226,32 @@ skill会根据以下因素动态评估：
 - ❌ 精度稍低、需本地计算
 - ✅ 构建：`python rag/scripts/rag_setup_st.py`
 - ✅ 需要：无（首次运行自动下载模型）
+
+### ⚠️ 重要：构建后必须测试编码 ⭐
+
+**构建完RAG后立即测试**，确认输出编码正常：
+
+```bash
+# 使用你文档中的关键词进行测试
+python rag/scripts/rag_query.py "伤害"  # 智谱AI
+# 或
+python rag/scripts/rag_query_st.py "伤害"  # Sentence-Transformers
+```
+
+**检查输出**：
+- ✅ 如果看到**正常的中文** → RAG工作正常
+- ❌ 如果看到**乱码**（如`À×Îö`、`æ± ä»`等）：
+
+```bash
+# Windows编码修复 - 如果看到乱码使用这个
+python rag/scripts/rag_query_helper.py "伤害"
+```
+
+**为什么这很重要**：
+- Windows控制台经常出现中文UTF-8编码问题
+- 辅助脚本会自动修复编码问题
+- 现在测试可以在实现阶段避免问题
+- 如果编码错误，Claude将无法读取检索到的chunks
 
 ### 使用示例
 
