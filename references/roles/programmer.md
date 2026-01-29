@@ -40,10 +40,10 @@ Programmer is responsible for technical implementation of game features.
 
 #### Step 1: Understand Project Context
 
-Read these 3 files ONLY - no exceptions:
+Read these files ONLY - no exceptions:
 
 ```bash
-1. Read PROJECT_PROGRESS.md                      # Current phase, task assignments
+1. Read PROJECT_PROGRESS.md                      # ⭐ Start here!
 2. Read docs/游戏大纲_v*.md (latest version)     # Game vision, core features
 3. Read docs/模块拆解_v*.md (latest version)     # Module structure, priorities
 ```
@@ -55,7 +55,44 @@ Glob: docs/游戏大纲_v*.md  # e.g., 游戏大纲_v1.md, 游戏大纲_v2.md - 
 Glob: docs/模块拆解_v*.md  # e.g., 模块拆解_v1.md, 模块拆解_v2.md - use highest number
 ```
 
-**Purpose**: Understand the big picture before diving into details
+**Purpose**: Understand the big picture and find your next task
+
+**📖 How to Read PROJECT_PROGRESS.md**:
+
+1. **Check "整体进度"** (Overall Progress)
+   - Confirm current development phase
+   - See overall completion status
+
+2. **Check "模块进度"** (Framework Progress)
+   - Find which modules are ready for implementation
+   - Check module architecture status (架构列)
+   - Identify dependencies between modules
+
+3. **Find Your Task in "功能明细"** (Function Details):
+   ```
+   工作流程：
+   a. Look for P0 (highest priority) functions with ⏸️ status
+   b. Find functions where "架构" is ⏸️ but not started
+   c. Or find functions where "实现" is ⏸️ but architecture exists
+   d. Copy the RAG keywords for that function
+   ```
+
+4. **Copy RAG Keywords**:
+   - Each function has suggested RAG query keywords
+   - Use these in Step 4 to query for detailed specs
+
+**Example**:
+```markdown
+From PROJECT_PROGRESS.md:
+┌─────────────────────────────────────────────────────────┐
+│ 功能: 跳跃机制                                           │
+│ 优先级: P0                                              │
+│ 设计: ⏸️ 架构: ⏸️ 实现: ⏸️ 测试: ⏸️                   │
+│ RAG查询关键字: 跳跃,重力,二段跳,跳跃高度                │
+└─────────────────────────────────────────────────────────┘
+
+Your action: Copy "跳跃,重力,二段跳" → Use in RAG query
+```
 
 #### Step 2: Identify Specific Task
 
@@ -253,10 +290,54 @@ code/
 
 ### Step 4: Implement by Priority
 
-- Read `docs/模块拆解_v1.md` priority order
-- Start with highest priority systems
-- Follow the EXACT priority order from the breakdown
-- Update PROJECT_PROGRESS.md as you complete each system
+**⚠️ CRITICAL: Follow Module-Based Priority Order**
+
+**Implementation Workflow**:
+
+```
+1. 查看PROJECT_PROGRESS.md的"模块进度"
+   │
+2. 找到优先级最高的未完成模块（P0 → P1 → P2 → P3）
+   │
+3. 检查该模块的"架构"状态
+   │
+   ├─ 如果架构未完成（⏸️）
+   │  └─ 先搭建模块：创建目录、基础类、管理器
+   │     - 参考进度表中的"代码架构"清单
+   │     - 完成后更新"架构"状态为 ⏸️
+   │
+   └─ 如果架构已完成（⏸️）
+      └─ 实现"功能明细"中的功能
+         - 按优先级：P0 → P1 → P2 → P3
+         - 使用RAG查询关键字获取需求
+         - 完成后更新"实现"状态为 ⏸️
+```
+
+**Example Implementation Order**:
+
+```
+PROJECT_PROGRESS.md shows:
+
+🏗️ 模块：核心玩法框架 [P0]
+├─ 架构: ⏸️  ← 先完成这个！
+└─ 功能明细:
+   ├─ 移动控制 [P0] | 实现: ⏸️
+   └─ 跳跃机制 [P0] | 实现: ⏸️
+
+🏗️ 模块：战斗系统框架 [P0]
+└─ 架构: ⏸️  ← 等核心玩法模块架构完成后再做
+
+Your implementation order:
+1. Create code/gameplay/ directory structure (模块架构)
+2. Implement 移动控制 (P0功能)
+3. Implement 跳跃机制 (P0功能)
+4. Then move to next module (战斗系统模块架构)
+```
+
+**Update Progress**:
+- After creating architecture: Update "架构" column ⏸️ → ⏸️
+- After implementing function: Update "实现" column ⏸️ → ⏸️
+- After testing passes: Update "测试" column ⏸️ → ⏸️
 
 ### Step 5: Testing as You Go
 

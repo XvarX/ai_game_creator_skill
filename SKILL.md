@@ -366,6 +366,7 @@ python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
 - [Tester Checklist](checklist/测试检查清单.md)
 
 **Templates**:
+- [Project Progress Template](templates/项目进度表模板.md) - ⭐ Framework-based progress tracking
 - [Game Outline Template](templates/游戏大纲模板.md)
 - [Module Breakdown Template](templates/模块拆解模板.md)
 - [Design Document Template](templates/策划文档模板.md)
