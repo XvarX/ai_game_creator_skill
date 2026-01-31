@@ -161,10 +161,10 @@ planner_config/                 # ⭐ Game balance and data tables (CSV)
 
 **Purpose of configuration tables**:
 - Separation of design parameters from implementation logic
-- Excel editing with formulas, validation, auto-fill
-- Export to CSV for program loading (UTF-8)
+- CSV format (UTF-8) edited by designers, loaded directly by code
 - Easy balance adjustments without code changes
 - Centralized data management for game systems
+- Use `scripts/config_loader.py` for consistent loading pattern
 
 **Implementation code structure** (created by Programmer in Phase 4):
 

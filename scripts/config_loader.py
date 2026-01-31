@@ -75,7 +75,7 @@ def load_csv(
             reader = csv.DictReader(content.splitlines())
             data = list(reader)
 
-        logger.info(f"✓ 加载成功: {len(data)} 行数据")
+        logger.info(f"[OK] 加载成功: {len(data)} 行数据")
         return data
 
     except Exception as e:

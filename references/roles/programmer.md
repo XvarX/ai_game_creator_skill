@@ -258,30 +258,38 @@ A ready-to-use configuration loading tool is available at `scripts/config_loader
 
 **Setup**:
 1. Copy `scripts/config_loader.py` to your project's `code/common/` directory
-2. Adjust the `GameConfig` class to match your actual config files
+2. Import the utility functions in your game code
 3. Use in your game:
 
 ```python
-from code.common.config_loader import GameConfig
+# code/main.py 或 game initialization
+from code.common.config_loader import load_csv, load_csv_typed, index_by_field
 
-# Initialize at game startup
-config = GameConfig()
+# 加载配置表
+type_map = {"等级": int, "HP": int, "攻击力": int}
+attributes = load_csv_typed("balance/角色属性表.csv", type_map)
+equipment = load_csv("items/装备配置表_武器.csv")
 
-# Access configuration data
-level_3_attrs = config.get_character_attributes(level=3)
-print(f"HP: {level_3_attrs['HP']}, 攻击力: {level_3_attrs['攻击力']}")
+# 创建索引（快速查找）
+attrs_by_level = index_by_field(attributes, "等级")
+equipment_by_id = index_by_field(equipment, "ID")
 
-# Get equipment by ID
-sword = config.get_equipment_by_id("W001")
-print(f"装备: {sword['名称']}")
+# 在游戏代码中使用
+player_hp = attrs_by_level[1]["HP"]  # 获取1级角色的HP
+sword = equipment_by_id["W001"]     # 获取ID为W001的武器
 ```
 
-**Features of config_loader.py**:
-- `ConfigLoader` - Basic CSV loading with type conversion
-- `GameConfig` - High-level config manager with pre-loaded accessors
-- Automatic type conversion (int, float)
+**Available utility functions**:
+- `load_csv(path)` - Load CSV file (string data)
+- `load_csv_typed(path, type_map)` - Load CSV with type conversion
+- `load_all_in_dir(path)` - Load all CSV files in a directory
+- `index_by_field(data, field)` - Create index for fast lookup
+- `find_by_field(data, field, value)` - Find specific row
+
+**Features**:
+- UTF-8 encoding support
 - Comment filtering (skips `#` lines)
-- Caching support
+- Type conversion (int, float, custom)
 - Comprehensive logging
 
 **Option 2: Manual CSV loading**
@@ -331,23 +339,24 @@ print(f"装备: {sword['名称']}")
 ```
 Query RAG for "角色属性 HP MP"
     ↓
-RAG returns design specs + mentions "角色属性表"
+RAG returns design specs + mentions "角色属性表.csv"
     ↓
-Load planner_config/balance/角色属性表.csv
+Load CSV: planner_config/balance/角色属性表.csv
     ↓
-Parse CSV data into Python structures
+Parse CSV into Python structures (using config_loader.py)
     ↓
-Implement with actual config data
+Implement feature using config data
 ```
 
 **⚠️ IMPORTANT**:
-- ✅ Config tables are CSV files in `planner_config/csv/`
+- ✅ Config tables are CSV files in `planner_config/` (no subdirectory)
 - ✅ Use UTF-8 encoding when reading
 - ✅ First row is column names, data starts from row 2
 - ✅ Percentages stored as decimals (0.05 = 5%)
 - ✅ Load once at game initialization
-- ✅ Design documents are large → Use RAG queries
-- ✅ Config files are small data → Read CSV directly
+- ✅ **Design documents** → Use RAG queries (large text)
+- ✅ **Config data** → Load CSV directly (numeric data)
+- ✅ Use `scripts/config_loader.py` for consistent loading pattern
 
 #### Step 7: Implement Based on Retrieved Chunks
 
