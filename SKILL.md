@@ -192,7 +192,6 @@ your-game-project/
 │   │   ├── rag_setup_st.py
 │   │   ├── rag_query.py
 │   │   ├── rag_query_st.py
-│   │   ├── rag_query_helper.py
 │   │   ├── rag_update_zhipu.py
 │   │   ├── rag_update_st.py
 │   │   └── update_keyword_index.py
@@ -296,16 +295,12 @@ python rag/scripts/rag_query_st.py "测试"  # Sentence-Transformers
 
 **Check the output**:
 - ✅ If you see **normal Chinese text** → RAG is working correctly
-- ❌ If you see **garbled text (乱码)** → Use the helper script:
-
-```bash
-# Windows encoding fix - use this if you see garbled Chinese
-python rag/scripts/rag_query_helper.py "测试"
-```
+- ❌ If you see **garbled text (乱码)** or error messages:
+  - Check that your console supports UTF-8
+  - Ensure RAG was built successfully
+  - Try running the query again
 
 **Why this matters**:
-- Windows console may have encoding issues with Chinese
-- The helper script (`rag_query_helper.py`) fixes UTF-8 encoding problems
 - Test immediately after building to catch issues early
 - Don't wait until implementation phase to discover encoding problems
 
@@ -323,10 +318,7 @@ python rag/scripts/rag_query_helper.py "测试"
 4. Implement/test based on retrieved chunks
 5. **NEVER read full source documents directly**
 
-**Windows encoding fix** (if you see garbled Chinese text):
-```bash
-python rag/scripts/rag_query_helper.py "关键词"
-```
+**Note**: The query scripts (`rag_query.py` and `rag_query_st.py`) already handle Windows UTF-8 encoding automatically.
 
 ### When to Update RAG
 

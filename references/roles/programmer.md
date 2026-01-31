@@ -231,10 +231,7 @@ result = subprocess.run([sys.executable, "rag/scripts/rag_query.py", "关键词"
 print(result.stdout)  # This prevents encoding issues (乱码)
 ```
 
-If you see garbled text (乱码), use the helper function:
-```bash
-python rag/scripts/rag_query_helper.py "关键词"
-```
+**Note**: The query scripts already handle UTF-8 encoding automatically. If you see garbled text, it may indicate other issues.
 
 #### Step 6: Implement Based on Retrieved Chunks
 
@@ -436,7 +433,6 @@ your-game-project/
 │   │   ├── rag_setup_st.py
 │   │   ├── rag_query.py
 │   │   ├── rag_query_st.py
-│   │   ├── rag_query_helper.py
 │   │   ├── rag_update_zhipu.py
 │   │   ├── rag_update_st.py
 │   │   └── update_keyword_index.py
@@ -502,20 +498,16 @@ your-game-project/
    python rag/scripts/rag_query_st.py "伤害"  # Sentence-Transformers
    ```
 
-   **⚠️ CRITICAL: Check output for encoding issues**:
+   **⚠️ CRITICAL: Check output**:
    - ✅ If you see **normal Chinese text** → RAG is working correctly
-   - ❌ If you see **garbled text (乱码)** like `À×Îö` or `æ± ä»`:
-
-   ```bash
-   # Use the helper script with encoding fix
-   python rag/scripts/rag_query_helper.py "伤害"
-   ```
+   - ❌ If you see **garbled text (乱码)** or error messages:
+     - Check that your console supports UTF-8
+     - Ensure RAG was built successfully
+     - Try running the query again
 
    **Why this matters**:
-   - Windows console often has UTF-8 encoding issues with Chinese
-   - The helper script fixes encoding problems automatically
    - Test now to avoid problems during implementation
-   - If encoding is broken, Claude cannot read the retrieved chunks
+   - The query scripts already handle UTF-8 encoding automatically
 
 ---
 

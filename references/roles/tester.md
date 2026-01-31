@@ -64,11 +64,7 @@ print(result.stdout)
 # Verify implementation against retrieved chunks
 ```
 
-**Encoding Note (IMPORTANT for Windows)**:
-Use the helper function if you see garbled text:
-```bash
-python rag/scripts/rag_query_helper.py "关键词"
-```
+**Note**: The query scripts already handle UTF-8 encoding automatically for Windows.
 
 #### Step 3: Cross-Reference Systems
 

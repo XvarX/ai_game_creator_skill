@@ -106,7 +106,6 @@ ai_game_creator_skill/
 │       ├── rag_setup_st.py           # Sentence-Transformers构建脚本
 │       ├── rag_query.py              # 智谱AI查询脚本
 │       ├── rag_query_st.py           # Sentence-Transformers查询脚本
-│       ├── rag_query_helper.py       # Windows编码修复脚本
 │       ├── rag_update_zhipu.py       # 智谱AI增量更新
 │       ├── rag_update_st.py          # Sentence-Transformers增量更新
 │       └── update_keyword_index.py   # 关键词索引更新脚本
@@ -236,7 +235,6 @@ your-game-project/
 │   │   ├── rag_setup_st.py
 │   │   ├── rag_query.py
 │   │   ├── rag_query_st.py
-│   │   ├── rag_query_helper.py
 │   │   ├── rag_update_zhipu.py
 │   │   ├── rag_update_st.py
 │   │   └── update_keyword_index.py
@@ -300,18 +298,15 @@ python rag/scripts/rag_query_st.py "伤害"  # Sentence-Transformers
 
 **检查输出**：
 - ✅ 如果看到**正常的中文** → RAG工作正常
-- ❌ 如果看到**乱码**（如`À×Îö`、`æ± ä»`等）：
-
-```bash
-# Windows编码修复 - 如果看到乱码使用这个
-python rag/scripts/rag_query_helper.py "伤害"
-```
+- ❌ 如果看到**乱码**或错误信息：
+  - 检查控制台是否支持UTF-8
+  - 确认RAG是否构建成功
+  - 尝试重新运行查询
 
 **为什么这很重要**：
-- Windows控制台经常出现中文UTF-8编码问题
-- 辅助脚本会自动修复编码问题
+- 查询脚本已经自动处理UTF-8编码
 - 现在测试可以在实现阶段避免问题
-- 如果编码错误，Claude将无法读取检索到的chunks
+- 如果出现问题，可以及早发现并解决
 
 ### 使用示例
 
