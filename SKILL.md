@@ -140,6 +140,32 @@ docs/
     └── 辅助玩法_v1.md
 ```
 
+**Planner configuration tables** (created by Designer in Phase 3):
+
+```
+planner_config/                 # ⭐ Game balance and data tables (CSV)
+├── balance/                    # Game balance parameters
+│   ├── 角色属性表.csv
+│   ├── 伤害系数表.csv
+│   └── 等级成长表.csv
+├── items/                      # Item/equipment data
+│   ├── 装备配置表.csv
+│   └── 道具配置表.csv
+├── skills/                     # Skill/ability data
+│   └── 技能配置表.csv
+├── enemies/                    # Enemy/boss data
+│   └── 敌人配置表.csv
+└── gameplay/                   # Game parameters
+    └── 游戏参数表.csv
+```
+
+**Purpose of configuration tables**:
+- Separation of design parameters from implementation logic
+- Excel editing with formulas, validation, auto-fill
+- Export to CSV for program loading (UTF-8)
+- Easy balance adjustments without code changes
+- Centralized data management for game systems
+
 **Implementation code structure** (created by Programmer in Phase 4):
 
 **⚠️ CRITICAL**: Code structure MUST mirror YOUR actual `docs/模块拆解_v1.md`
@@ -193,6 +219,12 @@ Then create:
 ```
 your-game-project/
 ├── docs/                    # Design documents
+├── planner_config/          # ⭐ Planner config tables (create here)
+│   ├── balance/            # Game balance parameters
+│   ├── items/              # Item/equipment data
+│   ├── skills/             # Skill/ability data
+│   ├── enemies/            # Enemy/boss data
+│   └── gameplay/           # Game parameters
 ├── rag/                     # ⭐ RAG directory (create here)
 │   ├── scripts/             # RAG scripts (from skill)
 │   │   ├── rag_setup_zhipu.py
@@ -409,8 +441,12 @@ python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
 - [Game Outline Template](templates/游戏大纲模板.md)
 - [Module Breakdown Template](templates/模块拆解模板.md)
 - [Design Document Template](templates/策划文档模板.md)
+- [Planner Config Table Template](templates/策划配置表模板.md) - ⭐ Game balance and data tables
 - [RAG Configuration Template](templates/RAG配置模板.md)
 - [Keyword Index Template](templates/关键词索引模板.md)
+
+**Utility Scripts**:
+- [Config Loader Utility](scripts/config_loader.py) - ⭐ CSV configuration table loading tool (copy to `code/common/`)
 
 ---
 

@@ -9,6 +9,7 @@ Designer is responsible for creating detailed design specifications that guide i
 - Define functional behaviors and interactions
 - Specify UI layouts and numeric parameters
 - Document workflows and user flows
+- Create planner configuration tables for game data
 - Ensure specifications are implementation-ready
 
 **When to switch to this role**:
@@ -82,6 +83,65 @@ For each system document:
 
 **Work priority**: Follow the priority ranking from module breakdown document.
 
+### Planner Configuration Tables
+
+**What are configuration tables?**
+
+Configuration tables (`planner_config/`) contain all numeric parameters, game balance data, and item/enemy/skill information. They use **CSV format** that designers edit directly and programmers load directly.
+
+**When to create configuration tables**:
+
+Create tables when your system includes:
+- Numeric parameters (HP, MP, damage values, etc.)
+- Progression curves (level-up requirements, XP tables)
+- Item/equipment stats
+- Skill/ability definitions
+- Enemy/boss data
+- Drop rates/rewards
+
+**Folder structure**:
+
+```
+planner_config/
+├── balance/        # Game balance parameters
+├── items/          # Item and equipment data
+├── skills/         # Skill and ability data
+├── enemies/        # Enemy and boss data
+└── gameplay/       # Game parameters
+```
+
+**How to create configuration tables**:
+
+1. **Identify data needs**: Review your system document for all numeric parameters
+2. **Create CSV file**: In `planner_config/[category]/filename.csv`
+3. **Edit CSV**: Use text editor (VS Code) or Excel
+4. **Add comments**: Use `#` at the beginning for documentation (optional)
+5. **Save as UTF-8**: Ensure UTF-8 encoding
+
+**CSV format**:
+- First row: Column names
+- Second row onwards: Data
+- Encoding: UTF-8
+- Separator: Comma (,)
+- Percentages as decimals (0.05 = 5%)
+
+**Example workflow**:
+
+For character attributes:
+1. Create `planner_config/balance/角色属性表.csv`
+2. First row: `等级,HP,MP,攻击力,防御力,暴击率,暴击倍率,移动速度,攻击速度`
+3. Add data rows
+4. Add comment lines at top with `#` for documentation
+5. Programmer loads the CSV file
+
+**Configuration table principles**:
+- ✅ Use CSV format (simple, direct, version-control friendly)
+- ✅ UTF-8 encoding
+- ✅ First row is column names
+- ✅ Document with `#` comments at file top
+- ✅ Keep tables focused (one CSV file per system)
+- ✅ Reference config tables in design documents
+
 ### Delivery Checklist
 
 Use `[checklist/执行策划检查清单.md](../checklist/执行策划检查清单.md)` to verify:
@@ -145,6 +205,7 @@ Wait for confirmation before proceeding to Document Supervisor review phase.
 
 **Template files**:
 - [Design Document Template](../templates/策划文档模板.md)
+- [Planner Config Table Template](../templates/策划配置表模板.md)
 
 **Reference documentation**:
 - [Game Development Workflow Details](../游戏开发流程.md)

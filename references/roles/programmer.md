@@ -234,9 +234,125 @@ print(result.stdout)  # This prevents encoding issues (乱码)
 
 **Note**: The query scripts already handle UTF-8 encoding automatically. If you see garbled text, it may indicate other issues.
 
-#### Step 6: Implement Based on Retrieved Chunks
+#### Step 6: Check for Configuration Tables
+
+After querying RAG for design specs, check if there are related configuration tables:
+
+**What are configuration tables?**
+
+Configuration tables (`planner_config/`) contain numeric parameters and game data separated from design logic:
+- Attribute values (HP, MP, attack, defense)
+- Progression curves (level-up requirements, XP tables)
+- Item/equipment stats
+- Skill/ability definitions
+- Enemy/boss data
+- Drop rates/rewards
+
+**How to use configuration tables**:
+
+Configuration tables are stored as **CSV files** in `planner_config/`.
+
+**Option 1: Use the config_loader.py utility** (Recommended ⭐)
+
+A ready-to-use configuration loading tool is available at `scripts/config_loader.py`.
+
+**Setup**:
+1. Copy `scripts/config_loader.py` to your project's `code/common/` directory
+2. Adjust the `GameConfig` class to match your actual config files
+3. Use in your game:
+
+```python
+from code.common.config_loader import GameConfig
+
+# Initialize at game startup
+config = GameConfig()
+
+# Access configuration data
+level_3_attrs = config.get_character_attributes(level=3)
+print(f"HP: {level_3_attrs['HP']}, 攻击力: {level_3_attrs['攻击力']}")
+
+# Get equipment by ID
+sword = config.get_equipment_by_id("W001")
+print(f"装备: {sword['名称']}")
+```
+
+**Features of config_loader.py**:
+- `ConfigLoader` - Basic CSV loading with type conversion
+- `GameConfig` - High-level config manager with pre-loaded accessors
+- Automatic type conversion (int, float)
+- Comment filtering (skips `#` lines)
+- Caching support
+- Comprehensive logging
+
+**Option 2: Manual CSV loading**
+
+1. **Identify relevant config tables**:
+   - Check RAG results for mentions of configuration tables
+   - Look for references like `角色属性表.csv`
+   - Design documents often link to related config tables
+
+2. **Load CSV configuration files**:
+   ```python
+   import csv
+   from pathlib import Path
+
+   def load_character_attributes():
+       """Load character attributes from CSV"""
+       csv_path = Path("planner_config/balance/角色属性表.csv")
+
+       with open(csv_path, 'r', encoding='utf-8') as f:
+           reader = csv.DictReader(f)
+           attributes = list(reader)
+
+       # Convert data types
+       for attr in attributes:
+           attr['等级'] = int(attr['等级'])
+           attr['HP'] = int(attr['HP'])
+           attr['攻击力'] = int(attr['攻击力'])
+           attr['暴击率'] = float(attr['暴击率'])
+
+       return attributes
+
+   # Usage
+   attributes = load_character_attributes()
+   level_3_stats = attributes[2]  # Level 3 stats
+   ```
+
+3. **Load at game initialization**:
+   ```python
+   class GameConfig:
+       def __init__(self):
+           self.character_attributes = self.load_csv('balance/角色属性表.csv')
+           self.equipment = self.load_csv('items/装备配置表_武器.csv')
+           self.skills = self.load_csv('skills/技能配置表.csv')
+   ```
+
+**Example workflow**:
+```
+Query RAG for "角色属性 HP MP"
+    ↓
+RAG returns design specs + mentions "角色属性表"
+    ↓
+Load planner_config/balance/角色属性表.csv
+    ↓
+Parse CSV data into Python structures
+    ↓
+Implement with actual config data
+```
+
+**⚠️ IMPORTANT**:
+- ✅ Config tables are CSV files in `planner_config/csv/`
+- ✅ Use UTF-8 encoding when reading
+- ✅ First row is column names, data starts from row 2
+- ✅ Percentages stored as decimals (0.05 = 5%)
+- ✅ Load once at game initialization
+- ✅ Design documents are large → Use RAG queries
+- ✅ Config files are small data → Read CSV directly
+
+#### Step 7: Implement Based on Retrieved Chunks
 
 - Use the retrieved chunks as your ONLY requirement source
+- Load CSV config files for numeric parameters
 - Implement the feature
 - If information is missing, query RAG again with different keywords
 
