@@ -45,6 +45,35 @@ Designer is responsible for creating detailed design specifications that guide i
 
 ---
 
+## ⚠️ MANDATORY: Progress Update Requirement
+
+**🚨 CRITICAL RULE: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING EACH DOCUMENT**
+
+**After finishing ANY design document**, you MUST:
+
+1. **Open PROJECT_PROGRESS.md**
+2. **Find the relevant system** in "功能明细" table
+3. **Update "设计" status**: ⏸️ → ⏸️
+4. **Save the file**
+5. **Announce the update**:
+   ```
+   ✓ Updated PROJECT_PROGRESS.md:
+   - [模块名] > [系统名]
+   - 设计状态: ⏸️ → ⏸️
+   ```
+
+**❌ FORBIDDEN**:
+- ❌ Say "document is complete" without updating PROJECT_PROGRESS.md
+- ❌ Move to next document before updating progress
+- ❌ Expect Lead Designer or Programmer to update your progress
+
+**✅ REQUIRED**:
+- ✅ Update progress IMMEDIATELY after completing each document
+- ✅ This is YOUR responsibility as Designer
+- ✅ Task is NOT complete until PROJECT_PROGRESS.md is updated
+
+---
+
 ## Phase 3: Detailed Design Documents
 
 After outline approval, Lead Designer says:

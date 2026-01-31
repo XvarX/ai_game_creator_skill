@@ -519,6 +519,37 @@ code/
 
 ### Step 4: Implement by Priority
 
+**⚠️ MANDATORY PROGRESS UPDATE RULE**
+
+**🚨 CRITICAL: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING ANY TASK**
+
+**After completing ANY task**, you MUST:
+
+1. **Open PROJECT_PROGRESS.md**
+2. **Find the relevant module/system/function**
+3. **Update the status column IMMEDIATELY**:
+   - After creating architecture: Update "架构" ⏸️ → ⏸️
+   - After implementing function: Update "实现" ⏸️ → ⏸️
+   - After testing passes: Update "测试" ⏸️ → ⏸️
+4. **Save the file**
+5. **Announce the update**:
+   ```
+   ✓ Updated PROJECT_PROGRESS.md:
+   - [模块名] > [系统名] > [功能名]
+   - 架构/实现/测试状态: ⏸️ → ⏸️
+   ```
+
+**❌ FORBIDDEN**:
+- ❌ Say "implementation is complete" without updating PROJECT_PROGRESS.md
+- ❌ Move to next task before updating current task status
+- ❌ Say "I'll update progress later"
+- ❌ Expect Tester or others to update your progress
+
+**✅ REQUIRED**:
+- ✅ Update progress IMMEDIATELY after each task completion
+- ✅ This is YOUR responsibility as Programmer
+- ✅ Task is NOT considered complete until PROJECT_PROGRESS.md is updated
+
 **⚠️ CRITICAL: Follow Module-Based Priority Order**
 
 **Implementation Workflow**:

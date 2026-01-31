@@ -18,6 +18,35 @@ Tester is responsible for quality assurance and validation of implemented featur
 
 ---
 
+## ⚠️ MANDATORY: Progress Update Requirement
+
+**🚨 CRITICAL RULE: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING TESTING**
+
+**After finishing testing ANY feature**, you MUST:
+
+1. **Open PROJECT_PROGRESS.md**
+2. **Find the relevant function** in "功能明细" table
+3. **Update "测试" status**: ⏸️ → ⏸️ (if tests pass) or document issues
+4. **Save the file**
+5. **Announce the update**:
+   ```
+   ✓ Updated PROJECT_PROGRESS.md:
+   - [模块名] > [系统名] > [功能名]
+   - 测试状态: ⏸️ → ⏸️ (或记录问题)
+   ```
+
+**❌ FORBIDDEN**:
+- ❌ Say "testing is complete" without updating PROJECT_PROGRESS.md
+- ❌ Move to next feature before updating current test status
+- ❌ Expect Programmer to update your test results
+
+**✅ REQUIRED**:
+- ✅ Update progress IMMEDIATELY after testing each feature
+- ✅ This is YOUR responsibility as Tester
+- ✅ Testing is NOT complete until PROJECT_PROGRESS.md is updated
+
+---
+
 ## ⚠️ CRITICAL: Mandatory Document Access Workflow
 
 ### 🚨🚨🚨 READ THIS BEFORE STARTING ANY TESTING 🚨🚨🚨

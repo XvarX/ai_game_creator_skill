@@ -614,28 +614,50 @@ planner_config/
 4. 在文件开头用 `#` 添加说明（单位、公式、相关文档）
 5. 在设计文档中引用配置表
 
-### Update Frequency
+### ⚠️ MANDATORY Progress Updates
 
-**When to update**:
-- ✅ After completing each phase
-- ✅ After finishing each design document
-- ✅ After code architecture is created
-- ✅ After each function is implemented
-- ✅ After tests pass
+**🚨 CRITICAL RULE: ALL ROLES MUST UPDATE PROGRESS IMMEDIATELY AFTER COMPLETING TASKS**
+
+**When to update (MANDATORY - NOT OPTIONAL)**:
+- ✅ **IMMEDIATELY** after completing each phase
+- ✅ **IMMEDIATELY** after finishing each design document
+- ✅ **IMMEDIATELY** after code architecture is created
+- ✅ **IMMEDIATELY** after each function is implemented
+- ✅ **IMMEDIATELY** after tests pass
 - ⚠️ After any priority/dependency changes
 
+**❌ FORBIDDEN**:
+- ❌ Say "task is complete" without updating PROJECT_PROGRESS.md
+- ❌ Move to next task before updating progress
+- ❌ Say "I'll update progress later"
+- ❌ Expect someone else to update your progress
+
+**✅ REQUIRED BEHAVIOR**:
+After completing ANY task, you MUST:
+1. Open PROJECT_PROGRESS.md
+2. Find the relevant module/system/function
+3. Update the status column immediately:
+   - 设计: ⏸️ → ⏸️ (when design is complete)
+   - 架构: ⏸️ → ⏸️ (when architecture is complete)
+   - 实现: ⏸️ → ⏸️ (when implementation is complete)
+   - 测试: ⏸️ → ⏸️ (when testing passes)
+4. Save the file
+5. Announce the update: "✓ Updated PROJECT_PROGRESS.md: [模块] [系统] [状态] ⏸️→⏸️"
+
 **How to update**:
-1. Mark checkboxes (⏸️ → 🔄 → ⏸️)
+1. Mark checkboxes (⏸️ → ⏸️)
 2. Update completion percentages
 3. Add new tasks to "当前任务"
 4. Move completed tasks to "更新日志"
 
 **Usage for all roles**:
-- 🎨 **主策划** - Check before making changes
-- ✍️ **执行策划** - Update "设计" status after writing docs
+- 🎨 **主策划** - Update progress after each phase completion, check before making changes
+- ✍️ **执行策划** - **MANDATORY**: Update "设计" status immediately after writing each doc
 - 📋 **文档监督员** - Check to understand scope before review
-- 💻 **程序员** - Find next P0 task, use RAG keywords to query specs
-- 🔍 **测试员** - Find untested functions, use RAG keywords to understand expected behavior
+- 💻 **程序员** - **MANDATORY**: Update "架构" and "实现" status immediately after completion
+- 🔍 **测试员** - **MANDATORY**: Update "测试" status immediately after testing passes
+
+**Enforcement**: Tasks are NOT considered complete until PROJECT_PROGRESS.md is updated.
 
 ---
 

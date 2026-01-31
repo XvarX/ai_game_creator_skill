@@ -96,6 +96,39 @@ This skill uses progressive disclosure - role-specific instructions are loaded o
 
 ## 🔄 Role Switching Mechanism
 
+### ⚠️ CRITICAL: Mandatory Progress Update Rule
+
+**🚨 ALL ROLES MUST FOLLOW THIS RULE 🚨**
+
+**After completing ANY task, you MUST immediately update PROJECT_PROGRESS.md**:
+
+```bash
+# IMMEDIATELY after completing work, update progress:
+1. Open PROJECT_PROGRESS.md
+2. Find the relevant module/system/function
+3. Update status columns:
+   - 设计: ⏸️ → ⏸️ (when design is complete)
+   - 架构: ⏸️ → ⏸️ (when architecture is complete)
+   - 实现: ⏸️ → ⏸️ (when implementation is complete)
+   - 测试: ⏸️ → ⏸️ (when testing passes)
+4. Save the file immediately
+```
+
+**❌ FORBIDDEN**:
+- ❌ Say "task is complete" without updating PROJECT_PROGRESS.md
+- ❌ Move to next task before updating current task status
+- ❌ Say "I'll update progress later"
+- ❌ Expect other roles to update your progress
+
+**✅ REQUIRED**:
+- ✅ Update progress IMMEDIATELY after each task completion
+- ✅ Announce what was updated: "Updated PROJECT_PROGRESS.md: [模块] [系统] [状态] ⏸️→⏸️"
+- ✅ This applies to ALL roles (Lead Designer, Designer, Programmer, Tester)
+
+**Enforcement**: Tasks are NOT considered complete until PROJECT_PROGRESS.md is updated.
+
+---
+
 ### Role Switch Triggers
 
 1. **User command**: "主策划：[request]" → Immediately switch to Lead Designer
