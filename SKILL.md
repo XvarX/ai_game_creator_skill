@@ -154,8 +154,15 @@ code/                           # Created based on YOUR module breakdown
 │   └── [system-2]/
 ├── [module-2]/
 │   └── [system-3]/
-└── common/                      # Always add shared utilities
+├── common/                      # Always add shared utilities
+└── main.py                      # ⭐ Game entry point (MUST be in code/)
 ```
+
+**⚠️ CRITICAL CODE PLACEMENT RULES**:
+- ✅ **ALL code files MUST be in `code/` directory**
+- ✅ Including: `main.py`, `config.py`, `settings.py`, `__init__.py`, etc.
+- ❌ **NEVER create code files in project root**
+- ❌ **NEVER place entry files outside `code/` directory**
 
 **Example**: If `docs/模块/` has:
 - `战斗模块/伤害系统_v1.md`

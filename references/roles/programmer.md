@@ -27,6 +27,7 @@ Programmer is responsible for technical implementation of game features.
 - ❌ **NEVER** use `Read` to recursively read all design documents
 - ❌ **NEVER** attempt to "review all documentation" or "familiarize with all docs"
 - ❌ **NEVER** think "let me check what docs exist before starting"
+- ❌ **NEVER** create code files outside `code/` directory
 
 **VIOLATION CONSEQUENCES**:
 - Waste 100,000+ tokens reading unnecessary content
@@ -356,6 +357,40 @@ code/
 - Plan for scalability
 - Consider performance implications
 - Document architectural decisions
+
+### ⚠️ CRITICAL: Code File Placement Rules
+
+**🚨 MANDATORY: ALL code files MUST be in `code/` directory**
+
+**Examples of CORRECT placement**:
+```
+✅ code/main.py              # Game entry point
+✅ code/config.py           # Configuration
+✅ code/settings.py        # Settings
+✅ code/constants.py        # Constants
+✅ code/utils/             # Utility modules
+✅ code/gameplay/main.py   # Module-specific entry
+```
+
+**Examples of WRONG placement**:
+```
+❌ main.py                 # ❌ WRONG! In project root
+❌ config.py              # ❌ WRONG! In project root
+❌ code/../utils.py        # ❌ WRONG! Outside code/
+```
+
+**When creating entry files**:
+- Always place `main.py` inside `code/` directory
+- If you need multiple entry points, organize them under `code/`:
+  - `code/main.py` - Main game entry
+  - `code/tools/level_editor.py` - Level editor tool
+  - `code/tests/run_tests.py` - Test runner
+
+**Running the game**:
+- From project root: `python code/main.py` or `python -m code.main`
+- NEVER place entry files at project root
+
+---
 
 ### Step 4: Implement by Priority
 
