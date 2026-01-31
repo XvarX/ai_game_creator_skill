@@ -175,29 +175,43 @@ docs/
 
 **Planner configuration tables** (created by Designer in Phase 3):
 
+**⚠️ IMPORTANT**: Folder structure should be based on YOUR actual `docs/模块拆解_v1.md`, not fixed RPG categories.
+
 ```
-planner_config/                 # ⭐ Game balance and data tables (CSV)
-├── balance/                    # Game balance parameters
-│   ├── 角色属性表.csv
-│   ├── 伤害系数表.csv
-│   └── 等级成长表.csv
-├── items/                      # Item/equipment data
-│   ├── 装备配置表.csv
-│   └── 道具配置表.csv
-├── skills/                     # Skill/ability data
-│   └── 技能配置表.csv
-├── enemies/                    # Enemy/boss data
-│   └── 敌人配置表.csv
-└── gameplay/                   # Game parameters
-    └── 游戏参数表.csv
+planner_config/                 # ⭐ Game configuration tables (CSV format)
+├── [module-1]/                 # Organized by module (based on module breakdown)
+│   └── config_table.csv
+├── [module-2]/
+│   └── config_table.csv
+└── game_params.csv             # Or put everything in root if simple game
 ```
 
 **Purpose of configuration tables**:
-- Separation of design parameters from implementation logic
+- Numeric parameters (HP, MP, damage values, XP curves, etc.)
 - CSV format (UTF-8) edited by designers, loaded directly by code
 - Easy balance adjustments without code changes
-- Centralized data management for game systems
 - Use `scripts/config_loader.py` for consistent loading pattern
+- **See**: [templates/策划配置表模板.md](templates/策划配置表模板.md)
+
+**Game data files** (created by Designer in Phase 3):
+
+**⚠️ IMPORTANT**: Folder structure should be based on YOUR actual `docs/模块拆解_v1.md`.
+
+```
+game_data/                      # ⭐ Game data files (JSON, TXT, custom formats)
+├── [module-1]/                 # Organized by module (based on module breakdown)
+│   ├── level_01.json          # Maps, levels, etc.
+│   └── dialog_data.json       # Dialogs, quests, etc.
+├── [module-2]/
+│   └── data_file.json
+└── input_config.json           # Or put everything in root if simple game
+```
+
+**Purpose of game_data files**:
+- Hand-edited data files (maps, dialogs, levels, etc.)
+- Various formats: JSON, TXT, XML, custom formats
+- Content data vs configuration parameters
+- **See**: [templates/策划配置表模板.md](templates/策划配置表模板.md)
 
 **Implementation code structure** (created by Programmer in Phase 4):
 
@@ -474,7 +488,7 @@ python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
 - [Game Outline Template](templates/游戏大纲模板.md)
 - [Module Breakdown Template](templates/模块拆解模板.md)
 - [Design Document Template](templates/策划文档模板.md)
-- [Planner Config Table Template](templates/策划配置表模板.md) - ⭐ Game balance and data tables
+- [Config & Data Template](templates/策划配置表模板.md) - ⭐ Configuration tables (CSV) and game data files
 - [RAG Configuration Template](templates/RAG配置模板.md)
 - [Keyword Index Template](templates/关键词索引模板.md)
 
