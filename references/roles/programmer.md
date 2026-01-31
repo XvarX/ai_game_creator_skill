@@ -94,14 +94,86 @@ From PROJECT_PROGRESS.md:
 Your action: Copy "跳跃,重力,二段跳" → Use in RAG query
 ```
 
-#### Step 2: Identify Specific Task
+#### Step 2: Check RAG Setup Status (Before Implementation)
+
+⚠️ **IMPORTANT**: Before starting any implementation, check if RAG is set up.
+
+**Check if RAG exists**:
+
+```bash
+# Quick check (Windows/Linux/macOS)
+python rag/scripts/rag_utils.py check
+```
+
+**Or check manually**:
+- Windows: `Test-Path rag/chroma_db`
+- Linux/macOS: `test -d rag/chroma_db`
+
+---
+
+### Scenario A: RAG Already Exists ✅
+
+Great! Proceed to **Step 3: Identify Specific Task**.
+
+---
+
+### Scenario B: RAG Does NOT Exist ⚠️
+
+**⚠️ CRITICAL**: Must ask user to choose RAG option BEFORE proceeding!
+
+**Unless user has already specified RAG option, MUST ask:**
+
+```
+⚠️ 检测到RAG系统尚未配置
+
+RAG系统用于高效访问设计文档，节省80-90%的token消耗。
+在开始实现之前，需要先配置RAG系统。
+
+请选择RAG embedding方案：
+
+【方案1：智谱AI Embedding-3】（强烈推荐）
+✅ 优点：
+  - 精度高、中文优化、云服务
+  - 稳定可靠，无需下载模型
+  - 速度快（云端处理）
+❌ 缺点：
+  - 需要API密钥
+  - 成本：~0.01元/月（15万字文档）
+📋 需要：智谱API密钥
+
+【方案2：Sentence-Transformers】（免费，但可能有网络问题）
+✅ 优点：
+  - 完全免费、离线可用、隐私安全
+❌ 缺点：
+  - ⚠️ 首次运行需下载模型（~200MB）
+  - ⚠️ 如果网络不稳定可能下载失败
+  - 精度稍低、需本地计算
+  - 首次建立索引较慢
+📋 需要：无（但需要稳定的网络连接下载模型）
+
+🔧 推荐选择：方案1（智谱AI），更稳定可靠
+
+请选择方案（1/2）：
+```
+
+**After user chooses**:
+
+- **方案1**: Guide user to run `python rag/scripts/rag_utils.py setup_zhipu`
+- **方案2**: Warn user about network issues, then guide to run `python rag/scripts/rag_utils.py setup_st`
+  - If setup fails due to network, suggest switching to 方案1
+
+**Only after RAG is successfully built**, proceed to Step 3.
+
+---
+
+#### Step 3: Identify Specific Task
 
 From PROJECT_PROGRESS.md, identify:
 - Which module/system to implement
 - Current phase status
 - Task dependencies
 
-#### Step 3: Use Keyword Index (Navigation)
+#### Step 4: Use Keyword Index (Navigation)
 
 ```bash
 # Read the keyword index to discover relevant systems
@@ -125,7 +197,7 @@ When RAG returns chunks like `[Chunk 1] 来源: docs\模块拆解_v2.md`, the pa
 - ✅ Ask the Designer for clarification if RAG doesn't provide enough information
 - ❌ NEVER read the source document directly
 
-#### Step 4: Query RAG for Detailed Requirements
+#### Step 5: Query RAG for Detailed Requirements
 
 ```python
 # Query RAG with targeted keywords ONLY
@@ -164,7 +236,7 @@ If you see garbled text (乱码), use the helper function:
 python rag/scripts/rag_query_helper.py "关键词"
 ```
 
-#### Step 5: Implement Based on Retrieved Chunks
+#### Step 6: Implement Based on Retrieved Chunks
 
 - Use the retrieved chunks as your ONLY requirement source
 - Implement the feature

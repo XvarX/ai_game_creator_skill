@@ -229,11 +229,49 @@ your-game-project/
 
 ### RAG Setup Options
 
-Choose based on your needs:
+⚠️ **IMPORTANT**: Unless the user has explicitly specified a choice, **ALWAYS ask the user to choose between these options** before setting up RAG.
+
+**Standard inquiry when RAG setup is needed**:
+
+```
+⚠️ RAG系统尚未配置
+
+RAG系统用于高效访问设计文档，节省80-90%的token消耗。
+在继续之前，需要先配置RAG系统。
+
+请选择RAG embedding方案：
+
+【方案1：智谱AI Embedding-3】（强烈推荐）
+✅ 优点：
+  - 精度高、中文优化、云服务
+  - 稳定可靠，无需下载模型
+  - 速度快（云端处理）
+❌ 缺点：
+  - 需要API密钥
+  - 成本：~0.01元/月（15万字文档）
+📋 需要：智谱API密钥
+
+【方案2：Sentence-Transformers】（免费，但可能有网络问题）
+✅ 优点：
+  - 完全免费、离线可用、隐私安全
+❌ 缺点：
+  - ⚠️ 首次运行需下载模型（~200MB）
+  - ⚠️ 如果网络不稳定可能下载失败
+  - 精度稍低、需本地计算
+  - 首次建立索引较慢
+📋 需要：无（但需要稳定的网络连接下载模型）
+
+🔧 推荐选择：方案1（智谱AI），更稳定可靠
+
+如果选择方案2遇到网络问题，可以随时切换到方案1。
+
+请选择方案（1/2）：
+```
 
 **Option 1: ZhipuAI Embedding-3** (Recommended)
 - ✅ High accuracy, Chinese optimized
-- ✅ Cloud-based, no local computation
+- ✅ Cloud-based, no local computation, no model download
+- ✅ Stable and reliable
 - Cost: ~0.01 CNY/month for typical projects
 - Setup: Create `rag/.env` with `ZHIPUAI_API_KEY=your_key_here`, then run `python rag/scripts/rag_setup_zhipu.py`
 
@@ -241,6 +279,8 @@ Choose based on your needs:
 - ✅ Completely free, no API costs
 - ✅ Works offline, privacy-focused
 - ❌ Lower accuracy than commercial APIs
+- ❌ First run requires downloading model (~200MB)
+- ❌ May fail if network is unstable
 - Setup: Run `python rag/scripts/rag_setup_st.py` (first run downloads model)
 
 ### ⚠️ CRITICAL: Test RAG After Building
