@@ -1,6 +1,6 @@
 # Tester Role Guide
 
-## 🎯 Role Responsibilities
+## [TARGET] Role Responsibilities
 
 Tester is responsible for quality assurance and validation of implemented features.
 
@@ -18,43 +18,32 @@ Tester is responsible for quality assurance and validation of implemented featur
 
 ---
 
-## ⚠️ MANDATORY: Progress Update Requirement
+## [WARNING] MANDATORY: Progress Update Requirement
 
-**🚨 CRITICAL RULE: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING TESTING**
+**[CRITICAL] CRITICAL: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING TESTING**
 
-**After finishing testing ANY feature**, you MUST:
+After finishing testing ANY feature:
+1. Open PROJECT_PROGRESS.md
+2. Find the relevant function in "功能明细" table
+3. Update "测试" status: ⏸️ → ⏸️ (if tests pass) or document issues
+4. Save the file
+5. Announce: "✓ Updated PROJECT_PROGRESS.md: [模块名] > [系统名] > [功能名] 测试状态: ⏸️ → ⏸️"
 
-1. **Open PROJECT_PROGRESS.md**
-2. **Find the relevant function** in "功能明细" table
-3. **Update "测试" status**: ⏸️ → ⏸️ (if tests pass) or document issues
-4. **Save the file**
-5. **Announce the update**:
-   ```
-   ✓ Updated PROJECT_PROGRESS.md:
-   - [模块名] > [系统名] > [功能名]
-   - 测试状态: ⏸️ → ⏸️ (或记录问题)
-   ```
+**[FORBIDDEN] FORBIDDEN**: Say "testing complete" without updating PROJECT_PROGRESS.md
+**[OK] REQUIRED**: Update IMMEDIATELY after testing each feature
 
-**❌ FORBIDDEN**:
-- ❌ Say "testing is complete" without updating PROJECT_PROGRESS.md
-- ❌ Move to next feature before updating current test status
-- ❌ Expect Programmer to update your test results
-
-**✅ REQUIRED**:
-- ✅ Update progress IMMEDIATELY after testing each feature
-- ✅ This is YOUR responsibility as Tester
-- ✅ Testing is NOT complete until PROJECT_PROGRESS.md is updated
+*详细规则见SKILL.md中的Progress Update Rule*
 
 ---
 
-## ⚠️ CRITICAL: Mandatory Document Access Workflow
+## [CRITICAL]: Mandatory Document Access Workflow
 
-### 🚨🚨🚨 READ THIS BEFORE STARTING ANY TESTING 🚨🚨🚨
+### [CRITICAL][CRITICAL][CRITICAL] READ THIS BEFORE STARTING ANY TESTING [CRITICAL][CRITICAL][CRITICAL]
 
 **FORBIDDEN ACTIONS**:
-- ❌ **NEVER** use `Glob` to scan all markdown files
-- ❌ **NEVER** use `Read` to recursively read all design documents
-- ❌ **NEVER** attempt to "review all documentation" before testing
+- [FORBIDDEN] **NEVER** use `Glob` to scan all markdown files
+- [FORBIDDEN] **NEVER** use `Read` to recursively read all design documents
+- [FORBIDDEN] **NEVER** attempt to "review all documentation" before testing
 
 **VIOLATION CONSEQUENCES**:
 - Waste 100,000+ tokens reading unnecessary content
@@ -63,7 +52,7 @@ Tester is responsible for quality assurance and validation of implemented featur
 
 ---
 
-### ✅ MANDATORY TESTING WORKFLOW
+### [OK] MANDATORY TESTING WORKFLOW
 
 #### Step 1: Understand What to Test
 
@@ -109,9 +98,9 @@ print(result.stdout)
 
 ---
 
-## 🔧 When RAG is NOT Available
+## [SETUP] When RAG is NOT Available
 
-**⚠️ Cross-platform solution** (Recommended):
+**[WARNING] Cross-platform solution** (Recommended):
 
 ```bash
 # Check if RAG exists
@@ -152,7 +141,7 @@ test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
 After implementation is complete, switch to Tester role:
 
 ```
-🔍 切换到测试员角色...
+[TESTER] 切换到测试员角色...
 ```
 
 ---
@@ -223,10 +212,10 @@ print(result.stdout)
 ```
 
 **Benefits for Tester**:
-- ✅ Quick access to design specifications
-- ✅ Verify implementation against requirements
-- ✅ Cross-reference multiple systems efficiently
-- ✅ **90%+ reduction in tokens needed**
+- [OK] Quick access to design specifications
+- [OK] Verify implementation against requirements
+- [OK] Cross-reference multiple systems efficiently
+- [OK] **90%+ reduction in tokens needed**
 
 ---
 
@@ -296,7 +285,7 @@ When bugs are found:
 
 ---
 
-## 🎓 Delivery Checklist
+## [GUIDE] Delivery Checklist
 
 Use `[checklist/测试检查清单.md](../checklist/测试检查清单.md)` to ensure thoroughness.
 
@@ -320,7 +309,7 @@ Use `[checklist/测试检查清单.md](../checklist/测试检查清单.md)` to e
 
 ---
 
-## 💡 Work Principles
+## [PRINCIPLE] Work Principles
 
 1. **Specification-based testing** - Verify against design docs, not assumptions
 2. **User perspective** - Test from player experience viewpoint

@@ -1,480 +1,217 @@
 ---
 name: aigame_creator
-description: Professional game development workflow with multi-role collaboration (lead designer, designer, programmer, tester). Use when the user requests game development, creating a new game, or needs to design and implement game systems. Triggered by phrases like "make a game," "create a game," "主策划：[request]" (addressing lead designer), or requests to build/implement game features and mechanics. The skill manages the complete lifecycle from requirements gathering, module breakdown, detailed design documentation, technical implementation, to quality assurance.
+description: Professional game development workflow with multi-role collaboration. [CRITICAL] Role prefix trigger: When user messages start with "主策划：", "执行策划：", "文档监督员：", "程序员：", "测试员：", IMMEDIATELY switch to corresponding role. Use for game development, creating new games, designing/implementing game systems. Triggered by phrases like "make a game," "create a game," role prefixes, or requests to build/implement features. Manages complete lifecycle: requirements → module breakdown → design docs → RAG build → implementation → testing.
 ---
 
 # Game Development Collaboration
 
-Simulate a professional game development team with four distinct roles: **Lead Designer**, **Designer**, **Document Supervisor**, **Programmer**, and **Tester**. Work sequentially through each phase, obtaining user confirmation at key checkpoints.
+Professional game development workflow with 5 roles: **Lead Designer**, **Designer**, **Document Supervisor**, **Programmer**, and **Tester**.
+
+**[CRITICAL] Role Prefix Trigger Pattern**: When user messages start with role prefixes ("主策划：", "执行策划：", "文档监督员：", "程序员：", "测试员："), IMMEDIATELY switch to the corresponding role.
+
+Workflow: Requirements → Module breakdown → Design documents → Document review → **RAG build** → Implementation → Testing → Delivery
 
 ---
 
-## 🎯 Role Navigation
+## [TARGET] Role Navigation
 
-This skill uses progressive disclosure - role-specific instructions are loaded only when needed. Click on each role to see detailed guidance.
+Progressive disclosure: Detailed role instructions are in references/roles/, loaded only when needed.
 
-### 🎨 Lead Designer (主策划)
+**[TARGET] Lead Designer (主策划)** - Requirements analysis, module breakdown, game outline, project progress tracking
+→ [references/roles/lead_designer.md](references/roles/lead_designer.md)
 
-**When to switch**: User says "主策划：[request]", proposes new game idea, or needs design direction adjustment.
+**[DESIGNER] Designer (执行策划)** - System design documents, functional specifications, configuration tables
+→ [references/roles/designer.md](references/roles/designer.md)
 
-**Core responsibilities**:
-- Requirements analysis and vision clarification
-- Module breakdown and priority planning
-- Game outline creation
-- Project progress tracking
+**[DOC_SUPERVISOR] Document Supervisor (文档监督员)** - Document review, RAG build, quality gate
+→ [references/roles/document_supervisor.md](references/roles/document_supervisor.md)
 
-**📖 Detailed guide**: [references/roles/lead_designer.md](references/roles/lead_designer.md)
+**[PROGRAMMER] Programmer (程序员)** - Implementation, RAG queries, code architecture
+→ [references/roles/programmer.md](references/roles/programmer.md)
 
----
-
-### ✍️ Designer (执行策划)
-
-**When to switch**: After Lead Designer completes outline, or when detailed specifications are needed.
-
-**Core responsibilities**:
-- Write detailed system design documents
-- Define functional behaviors and parameters
-- Specify UI layouts and workflows
-
-**⚠️ CRITICAL CONSTRAINT**:
-- ❌ **NEVER write code or implementation logic**
-- ✅ **ONLY describe WHAT to build, not HOW**
-
-**📖 Detailed guide**: [references/roles/designer.md](references/roles/designer.md)
+**[TESTER] Tester (测试员)** - QA testing, bug reporting, UX evaluation
+→ [references/roles/tester.md](references/roles/tester.md)
 
 ---
 
-### 📋 Document Supervisor (文档监督员)
+## [WORKFLOW] Role Switching Mechanism
 
-**When to switch**: After Designer completes all documentation, before implementation begins.
+### [CRITICAL]: Mandatory Progress Update Rule
 
-**Core responsibilities**:
-- Comprehensive document review for logical consistency
-- Cross-system integration verification
-- Quality gate before implementation
+**[CRITICAL] ALL ROLES MUST UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING TASKS**
 
-**⚠️ SPECIAL NOTE**: This is the ONLY role permitted to read all documents for review purposes.
-
-**📖 Detailed guide**: [references/roles/document_supervisor.md](references/roles/document_supervisor.md)
-
----
-
-### 💻 Programmer (程序员)
-
-**When to switch**: After Document Supervisor approves design documents, or when technical implementation is needed.
-
-**Core responsibilities**:
-- Tech stack selection and architecture design
-- Feature implementation following design specs
-- Code quality and optimization
-
-**🚨 CRITICAL CONSTRAINTS**:
-- ❌ **NEVER use Glob to scan all markdown files**
-- ❌ **NEVER read all design documents recursively**
-- ✅ **MUST follow mandatory RAG workflow** (see below)
-
-**📖 Detailed guide**: [references/roles/programmer.md](references/roles/programmer.md)
-
----
-
-### 🔍 Tester (测试员)
-
-**When to switch**: After Programmer completes implementation, or when quality assurance is needed.
-
-**Core responsibilities**:
-- Functional testing based on design specs
-- Bug reporting and verification
-- UX evaluation and improvement suggestions
-
-**🚨 CRITICAL CONSTRAINTS**:
-- ❌ **NEVER read all design documents**
-- ✅ **MUST use RAG for targeted queries**
-
-**📖 Detailed guide**: [references/roles/tester.md](references/roles/tester.md)
-
----
-
-## 🔄 Role Switching Mechanism
-
-### ⚠️ CRITICAL: Mandatory Progress Update Rule
-
-**🚨 ALL ROLES MUST FOLLOW THIS RULE 🚨**
-
-**After completing ANY task, you MUST immediately update PROJECT_PROGRESS.md**:
-
-```bash
-# IMMEDIATELY after completing work, update progress:
+After completing ANY task, you MUST:
 1. Open PROJECT_PROGRESS.md
 2. Find the relevant module/system/function
-3. Update status columns:
-   - 设计: ⏸️ → ⏸️ (when design is complete)
-   - 架构: ⏸️ → ⏸️ (when architecture is complete)
-   - 实现: ⏸️ → ⏸️ (when implementation is complete)
-   - 测试: ⏸️ → ⏸️ (when testing passes)
-4. Save the file immediately
-```
+3. Update status column (⏸️ → ⏸️)
+4. Save the file
+5. Announce: "Updated PROJECT_PROGRESS.md: [模块] [系统] [状态] ⏸️→⏸️"
 
-**❌ FORBIDDEN**:
-- ❌ Say "task is complete" without updating PROJECT_PROGRESS.md
-- ❌ Move to next task before updating current task status
-- ❌ Say "I'll update progress later"
-- ❌ Expect other roles to update your progress
+**[FORBIDDEN] FORBIDDEN**: Say "task complete" without updating PROJECT_PROGRESS.md
+**[OK] REQUIRED**: Update IMMEDIATELY after each task completion
 
-**✅ REQUIRED**:
-- ✅ Update progress IMMEDIATELY after each task completion
-- ✅ Announce what was updated: "Updated PROJECT_PROGRESS.md: [模块] [系统] [状态] ⏸️→⏸️"
-- ✅ This applies to ALL roles (Lead Designer, Designer, Programmer, Tester)
-
-**Enforcement**: Tasks are NOT considered complete until PROJECT_PROGRESS.md is updated.
+*详细更新步骤见各角色文档 / Detailed steps in each role's guide*
 
 ---
 
-### Role Switch Triggers
+### [CRITICAL] Role Switch Triggers
 
-1. **User command**: "主策划：[request]" → Immediately switch to Lead Designer
-2. **Design clarification needed**: Designer discovers unclear requirements → Switch to Lead Designer → Switch back to Designer
-3. **Technical feasibility issue**: Programmer finds design unfeasible → Switch to Lead Designer → Switch back to Programmer
-4. **Bug discovered**: Tester finds bug → Switch to Programmer to fix → Switch back to Tester to verify
+**[MANDATORY] Role Prefix Command Pattern**:
+
+When user messages start with these role prefixes, IMMEDIATELY switch to the corresponding role:
+
+| 用户指令前缀 | 切换到角色 |
+|-------------|-----------|
+| `主策划：` | Lead Designer |
+| `执行策划：` | Designer |
+| `文档监督员：` | Document Supervisor |
+| `程序员：` | Programmer |
+| `测试员：` | Tester |
+
+**[FORBIDDEN] FORBIDDEN**: Ignore or delay role switch when user uses role prefix
+**[OK] REQUIRED**: Switch role immediately when prefix is detected
+
+**Example**:
+```
+User: "程序员：帮我实现角色移动功能"
+→ [TARGET] Immediately switch to Programmer role
+→ Implement movement feature
+```
+
+**Other automatic triggers**:
+
+1. **Workflow progression**: Designer → Document Supervisor → Programmer → Tester
+2. **Design clarification needed**: Designer → Lead Designer → Designer
+3. **Technical feasibility issue**: Programmer → Lead Designer → Programmer
+4. **Bug discovered**: Tester → Programmer → Tester
 
 ### Role Switch Format
 
 Always announce role switches explicitly:
-
 ```
-🎯 Switching to [Role] role...
+[TARGET] Switching to [Role] role...
 [Discussion/Work]
-🎯 Switching back to [Role] role...
+[TARGET] Switching back to [Role] role...
 ```
-
-**IMPORTANT**: Never silently change roles. Always announce switches.
 
 ---
 
-## 📁 Recommended Directory Structure
+## [ACCESS_CONTROL] Document Access Rules (角色文档访问规则)
 
-**Design documents structure**:
+**原则：只看自己角色的文档，不看其他角色的文档**
 
-```
-docs/
-├── 游戏大纲_v1.md              # Game outline (Lead Designer)
-├── 模块拆解_v1.md              # Module breakdown (Lead Designer)
-│
-├── 模块/                       # Module documents (Designer)
-│   ├── 核心玩法模块/
-│   │   ├── 核心玩法系统_v1.md
-│   │   └── 操作控制系统_v1.md
-│   ├── 战斗模块/
-│   │   ├── 伤害系统_v1.md
-│   │   └── 状态系统_v1.md
-│   └── [其他模块]/
-│
-└── 玩法/                       # Gameplay documents (Designer)
-    ├── 核心玩法_v1.md
-    └── 辅助玩法_v1.md
-```
+| 角色 | 可以读 | 禁止读 |
+|------|--------|--------|
+| **Lead Designer** | [OK] lead_designer.md<br>[OK] PROJECT_PROGRESS.md<br>[OK] docs/设计文档 | [FORBIDDEN] programmer.md<br>[FORBIDDEN] tester.md |
+| **Designer** | [OK] designer.md<br>[OK] PROJECT_PROGRESS.md<br>[OK] docs/设计文档<br>[OK] templates/ | [FORBIDDEN] lead_designer.md<br>[FORBIDDEN] programmer.md<br>[FORBIDDEN] tester.md |
+| **Programmer** | [OK] programmer.md<br>[OK] PROJECT_PROGRESS.md<br>[OK] RAG查询结果<br>[OK] planner_config/ | [FORBIDDEN] lead_designer.md<br>[FORBIDDEN] designer.md<br>[FORBIDDEN] tester.md<br>[FORBIDDEN] 直接读docs/ |
+| **Tester** | [OK] tester.md<br>[OK] PROJECT_PROGRESS.md<br>[OK] RAG查询结果 | [FORBIDDEN] lead_designer.md<br>[FORBIDDEN] designer.md<br>[FORBIDDEN] programmer.md<br>[FORBIDDEN] 直接读docs/ |
+| **Document Supervisor** | [OK] **所有文档** (审查时) | - |
 
-**Planner configuration tables** (created by Designer in Phase 3):
-
-**⚠️ IMPORTANT**: Folder structure should be based on YOUR actual `docs/模块拆解_v1.md`, not fixed RPG categories.
-
-```
-planner_config/                 # ⭐ Game configuration tables (CSV format)
-├── [module-1]/                 # Organized by module (based on module breakdown)
-│   └── config_table.csv
-├── [module-2]/
-│   └── config_table.csv
-└── game_params.csv             # Or put everything in root if simple game
-```
-
-**Purpose of configuration tables**:
-- Numeric parameters (HP, MP, damage values, XP curves, etc.)
-- CSV format (UTF-8) edited by designers, loaded directly by code
-- Easy balance adjustments without code changes
-- Use `scripts/config_loader.py` for consistent loading pattern
-- **See**: [templates/策划配置表模板.md](templates/策划配置表模板.md)
-
-**Game data files** (created by Designer in Phase 3):
-
-**⚠️ IMPORTANT**: Folder structure should be based on YOUR actual `docs/模块拆解_v1.md`.
-
-```
-game_data/                      # ⭐ Game data files (JSON, TXT, custom formats)
-├── [module-1]/                 # Organized by module (based on module breakdown)
-│   ├── level_01.json          # Maps, levels, etc.
-│   └── dialog_data.json       # Dialogs, quests, etc.
-├── [module-2]/
-│   └── data_file.json
-└── input_config.json           # Or put everything in root if simple game
-```
-
-**Purpose of game_data files**:
-- Hand-edited data files (maps, dialogs, levels, etc.)
-- Various formats: JSON, TXT, XML, custom formats
-- Content data vs configuration parameters
-- **See**: [templates/策划配置表模板.md](templates/策划配置表模板.md)
-
-**Implementation code structure** (created by Programmer in Phase 4):
-
-**⚠️ CRITICAL**: Code structure MUST mirror YOUR actual `docs/模块拆解_v1.md`
-
-- ❌ **Do NOT use a fixed template**
-- ✅ **Read `模块拆解_v1.md` and create matching code structure**
-
-```
-code/                           # Created based on YOUR module breakdown
-├── [module-1]/                  # Mirrors each module in docs/模块/
-│   ├── [system-1]/              # Mirrors each system document
-│   └── [system-2]/
-├── [module-2]/
-│   └── [system-3]/
-├── common/                      # Always add shared utilities
-└── main.py                      # ⭐ Game entry point (MUST be in code/)
-```
-
-**⚠️ CRITICAL CODE PLACEMENT RULES**:
-- ✅ **ALL code files MUST be in `code/` directory**
-- ✅ Including: `main.py`, `config.py`, `settings.py`, `__init__.py`, etc.
-- ❌ **NEVER create code files in project root**
-- ❌ **NEVER place entry files outside `code/` directory**
-
-**Example**: If `docs/模块/` has:
-- `战斗模块/伤害系统_v1.md`
-- `角色模块/属性系统_v1.md`
-
-Then create:
-- `code/combat/damage/`
-- `code/character/attributes/`
-
-**Version management**:
-- Initial documents: `_v1.md`
-- Updates: `_v2.md`, `_v3.md`, etc.
-- **IMPORTANT**: Delete old versions after updates (single source of truth)
+**特殊情况**：角色切换时只读目标角色的文档
 
 ---
 
-## 🔧 RAG Integration (Retrieval-Augmented Generation)
+## [DIRECTORY] Recommended Directory Structure
+
+```
+your-game-project/
+├── docs/                    # Design documents
+│   ├── 游戏大纲_v1.md
+│   ├── 模块拆解_v1.md
+│   ├── 模块/                 # Module documents (Designer)
+│   │   ├── [模块名]/
+│   │   │   └── [系统名]_v1.md
+│   └── 玩法/                 # Gameplay documents
+├── planner_config/          # Game configuration tables (CSV) - Designer
+│   ├── balance/
+│   ├── items/
+│   └── skills/
+├── game_data/              # Game data files (JSON/TXT) - Designer
+├── rag/                    # RAG system ( Programmer/Tester)
+│   ├── scripts/
+│   ├── chroma_db/
+│   └── 关键词索引.md
+├── code/                   # Implementation code - Programmer
+│   ├── [module-1]/
+│   ├── common/
+│   └── main.py
+├── PROJECT_PROGRESS.md
+└── SKILL.md
+```
+
+**[CRITICAL]**:
+- [OK] ALL code files MUST be in `code/` directory
+- [OK] Code structure MUST mirror `docs/模块拆解_v1.md`
+- [OK] Initial documents: `_v1.md`, updates: `_v2.md`, `_v3.md`
+- [OK] **Delete old versions after updates** (single source of truth)
+
+**详细说明**:
+- Designer创建配置表: [templates/策划配置表模板.md](templates/策划配置表模板.md)
+- Programmer创建代码结构: 见programmer.md中的架构设计部分
+
+---
+
+## [SETUP] RAG Integration (Retrieval-Augmented Generation)
 
 ### Why RAG is Critical
 
 **Problem**: Reading all design documents wastes 100,000+ tokens
 **Solution**: RAG retrieves only relevant chunks (~2,000 words) - **98% token savings**
 
-### RAG Directory Structure
-
-**⚠️ CRITICAL**: Create `rag/` directory in your **project root** (where docs/ and SKILL.md are located):
-
-```
-your-game-project/
-├── docs/                    # Design documents
-├── planner_config/          # ⭐ Planner config tables (create here)
-│   ├── balance/            # Game balance parameters
-│   ├── items/              # Item/equipment data
-│   ├── skills/             # Skill/ability data
-│   ├── enemies/            # Enemy/boss data
-│   └── gameplay/           # Game parameters
-├── rag/                     # ⭐ RAG directory (create here)
-│   ├── scripts/             # RAG scripts (from skill)
-│   │   ├── rag_setup_zhipu.py
-│   │   ├── rag_setup_st.py
-│   │   ├── rag_query.py
-│   │   ├── rag_query_st.py
-│   │   ├── rag_update_zhipu.py
-│   │   ├── rag_update_st.py
-│   │   └── update_keyword_index.py
-│   ├── chroma_db/           # Vector database (auto-created)
-│   ├── .env                 # ZhipuAI API key (for ZhipuAI option)
-│   └── 关键词索引.md         # Keyword index (auto-generated)
-├── PROJECT_PROGRESS.md
-└── SKILL.md
-```
-
-**Setup steps**:
-1. Copy `rag/scripts/` from this skill to your project's `rag/` directory:
-
-   **Windows (PowerShell)**:
-   ```powershell
-   mkdir rag\scripts
-   copy C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts\* rag\scripts\
-   ```
-
-   **Windows (cmd)**:
-   ```cmd
-   mkdir rag\scripts
-   xcopy /E /I C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts rag\scripts
-   ```
-
-   **Linux/macOS**:
-   ```bash
-   mkdir -p rag/scripts
-   cp -r ~/.claude/skills/ai_game_creator_skill/rag/scripts/* rag/scripts/
-   ```
-
-2. Run setup script from your **project root**
-3. Vector database (`chroma_db/`) will be auto-created in `rag/`
-
-### RAG Setup Options
-
-⚠️ **IMPORTANT**: Unless the user has explicitly specified a choice, **ALWAYS ask the user to choose between these options** before setting up RAG.
-
-**Standard inquiry when RAG setup is needed**:
-
-```
-⚠️ RAG系统尚未配置
-
-RAG系统用于高效访问设计文档，节省80-90%的token消耗。
-在继续之前，需要先配置RAG系统。
-
-请选择RAG embedding方案：
-
-【方案1：智谱AI Embedding-3】（强烈推荐）
-✅ 优点：
-  - 精度高、中文优化、云服务
-  - 稳定可靠，无需下载模型
-  - 速度快（云端处理）
-❌ 缺点：
-  - 需要API密钥
-  - 成本：~0.01元/月（15万字文档）
-📋 需要：智谱API密钥
-
-【方案2：Sentence-Transformers】（免费，但可能有网络问题）
-✅ 优点：
-  - 完全免费、离线可用、隐私安全
-❌ 缺点：
-  - ⚠️ 首次运行需下载模型（~200MB）
-  - ⚠️ 如果网络不稳定可能下载失败
-  - 精度稍低、需本地计算
-  - 首次建立索引较慢
-📋 需要：无（但需要稳定的网络连接下载模型）
-
-🔧 推荐选择：方案1（智谱AI），更稳定可靠
-
-如果选择方案2遇到网络问题，可以随时切换到方案1。
-
-请选择方案（1/2）：
-```
-
-**Option 1: ZhipuAI Embedding-3** (Recommended)
-- ✅ High accuracy, Chinese optimized
-- ✅ Cloud-based, no local computation, no model download
-- ✅ Stable and reliable
-- Cost: ~0.01 CNY/month for typical projects
-- Setup: Create `rag/.env` with `ZHIPUAI_API_KEY=your_key_here`, then run `python rag/scripts/rag_setup_zhipu.py`
-
-**Option 2: Sentence-Transformers** (Free & Offline)
-- ✅ Completely free, no API costs
-- ✅ Works offline, privacy-focused
-- ❌ Lower accuracy than commercial APIs
-- ❌ First run requires downloading model (~200MB)
-- ❌ May fail if network is unstable
-- Setup: Run `python rag/scripts/rag_setup_st.py` (first run downloads model)
-
-### ⚠️ CRITICAL: Test RAG After Building
-
-**Immediately after building RAG**, verify it works correctly:
+### Quick Setup
 
 ```bash
-# Test query (use a keyword that exists in your docs)
-python rag/scripts/rag_query.py "测试"  # ZhipuAI
-# or
-python rag/scripts/rag_query_st.py "测试"  # Sentence-Transformers
+# 1. 复制RAG脚本
+python scripts/setup_rag.py setup
+
+# 2. 选择embedding方案并初始化
+# 方案1: 智谱AI (推荐) - 创建rag/.env文件，然后:
+python rag/scripts/rag_setup_zhipu.py
+
+# 方案2: Sentence-Transformers (免费):
+python rag/scripts/rag_setup_st.py
+
+# 3. 测试RAG
+python rag/scripts/rag_query.py "测试"
 ```
 
-**Check the output**:
-- ✅ If you see **normal Chinese text** → RAG is working correctly
-- ❌ If you see **garbled text (乱码)** or error messages:
-  - Check that your console supports UTF-8
-  - Ensure RAG was built successfully
-  - Try running the query again
+### RAG Query Workflow (Programmer & Tester)
 
-**Why this matters**:
-- Test immediately after building to catch issues early
-- Don't wait until implementation phase to discover encoding problems
-
-### RAG Query Workflow
-
-**For Programmer and Tester roles**:
-
-1. Read overview files only (PROJECT_PROGRESS.md + 游戏大纲 + 模块拆解)
+1. Read overview files: PROJECT_PROGRESS.md + 游戏大纲 + 模块拆解
 2. Check keyword index: `rag/关键词索引.md`
-3. Query RAG for specific requirements:
-   ```bash
-   python rag/scripts/rag_query.py "your keywords"  # ZhipuAI
-   python rag/scripts/rag_query_st.py "your keywords"  # Sentence-Transformers
-   ```
+3. Query RAG: `python rag/scripts/rag_query.py "keywords"`
 4. Implement/test based on retrieved chunks
 5. **NEVER read full source documents directly**
 
-**Note**: The query scripts (`rag_query.py` and `rag_query_st.py`) already handle Windows UTF-8 encoding automatically.
-
 ### When to Update RAG
 
-**Critical**: Update RAG after ANY document changes:
+**RAG update triggers**:
+- [WARNING] **After ANY document changes** (version updates, new documents, deletions)
+- [WARNING] **After Document Supervisor approves changes**
 
-**⚠️ Cross-platform solution** (Recommended - works on all platforms):
-```bash
-# Use the Python utility for cross-platform compatibility
-python rag/scripts/rag_utils.py update_zhipu    # ZhipuAI
-python rag/scripts/rag_utils.py update_st       # Sentence-Transformers
-python rag/scripts/rag_utils.py update_index    # Update keyword index
-```
+**Who updates RAG**:
+- [OK] **Document Supervisor** - Responsible for ALL RAG updates
+- [FORBIDDEN] Programmer/Tester - Should NOT update RAG themselves
 
-**Or use platform-specific commands**:
-```bash
-# Incremental update (85% faster)
-python rag/scripts/rag_update_zhipu.py    # or rag_update_st.py
-python rag/scripts/update_keyword_index.py
-```
-- Documents modified (version update)
-- New documents created
-- Documents deleted
-- After any "New Instruction Response"
+**If RAG is out of date**, remind user to have Document Supervisor update it.
 
-**Incremental update** (85% faster):
-```bash
-python rag/scripts/rag_update_zhipu.py    # or rag_update_st.py
-python rag/scripts/update_keyword_index.py
-```
-
-**Full rebuild** (only when switching solutions or >50% changes):
-
-**⚠️ Recommended: Use Python utility (cross-platform)**:
-```bash
-# Works on all platforms!
-python rag/scripts/rag_utils.py clean
-python rag/scripts/rag_utils.py setup_zhipu    # or setup_st
-```
-
-**Or use platform-specific commands**:
-
-**Windows (PowerShell)**:
-```powershell
-Remove-Item -Recurse -Force rag/chroma_db
-python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
-```
-
-**Windows (cmd)**:
-```cmd
-rmdir /S /Q rag\chroma_db
-python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
-```
-
-**Linux/macOS**:
-```bash
-rm -rf rag/chroma_db/
-python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
-```
+**详细指南**:
+- [ZhipuAI RAG集成指南](references/智谱RAG集成指南.md)
+- [RAG方案切换指南](references/RAG方案切换指南.md)
+- [RAG使用示例](references/RAG实际使用示例.md)
 
 ---
 
-## 📖 Reference Materials
+## [REFERENCE] Reference Materials
 
-**RAG Integration Guides**:
-- [ZhipuAI RAG Integration Guide](references/智谱RAG集成指南.md) - Complete setup and usage
-- [RAG Solution Switching Guide](references/RAG方案切换指南.md) - How to switch between options
-- [RAG Usage Examples](references/RAG实际使用示例.md) - Real-world query examples
+**RAG Integration**:
+- [ZhipuAI RAG Integration Guide](references/智谱RAG集成指南.md)
+- [RAG Solution Switching Guide](references/RAG方案切换指南.md)
+- [RAG Usage Examples](references/RAG实际使用示例.md)
 
-**Workflow Documentation**:
-- [Game Development Workflow Details](references/游戏开发流程.md) - Detailed phase-by-phase guide
+**Workflow**:
+- [Game Development Workflow Details](references/游戏开发流程.md)
 
 **Checklists**:
 - [Lead Designer Checklist](checklist/主策划检查清单.md)
@@ -484,20 +221,19 @@ python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
 - [Tester Checklist](checklist/测试检查清单.md)
 
 **Templates**:
-- [Project Progress Template](templates/项目进度表模板.md) - ⭐ Framework-based progress tracking
+- [Project Progress Template](templates/项目进度表模板.md)
 - [Game Outline Template](templates/游戏大纲模板.md)
 - [Module Breakdown Template](templates/模块拆解模板.md)
 - [Design Document Template](templates/策划文档模板.md)
-- [Config & Data Template](templates/策划配置表模板.md) - ⭐ Configuration tables (CSV) and game data files
-- [RAG Configuration Template](templates/RAG配置模板.md)
-- [Keyword Index Template](templates/关键词索引模板.md)
+- [Config & Data Template](templates/策划配置表模板.md)
 
 **Utility Scripts**:
-- [Config Loader Utility](scripts/config_loader.py) - ⭐ CSV configuration table loading tool (copy to `code/common/`)
+- [Config Loader Utility](scripts/config_loader.py) - CSV configuration table loading
+- [RAG Setup Utility](scripts/setup_rag.py) - Cross-platform RAG scripts installation
 
 ---
 
-## 💡 Key Principles
+## [PRINCIPLE] Key Principles
 
 1. **Role separation** - Each role has distinct responsibilities, respect boundaries
 2. **Design first, code second** - Never implement without clear design documentation
@@ -508,28 +244,29 @@ python rag/scripts/rag_setup_zhipu.py     # or rag_setup_st.py
 
 ---
 
-## 🎓 Quick Start Pattern
+## [GUIDE] Quick Start Pattern
 
 **User says**: "Make me a platformer game like Mario"
 
 **Workflow**:
-1. Switch to Lead Designer → Clarify requirements
-2. Lead Designer → Module breakdown → Game outline → Project progress tracker
-3. Switch to Designer → Write detailed system documents
-4. Switch to Document Supervisor → Review all documents
-5. Switch to Programmer → Setup RAG → Implement features (using RAG queries)
-6. Switch to Tester → Verify implementation → Report bugs
-7. Programmer fixes bugs → Tester verifies → Complete
+1. Lead Designer → Clarify requirements → Module breakdown → Game outline → Project progress tracker
+2. Designer → Write detailed system documents
+3. Document Supervisor → Review all documents → **Build RAG system** [WARNING] NEW
+4. Programmer → Use RAG to query docs → Implement features
+5. Tester → Use RAG to verify specs → Test implementation → Report bugs
+6. Programmer fixes bugs → Tester verifies → Complete
+
+**[CRITICAL]**: Document Supervisor MUST build RAG after document review, before handing off to Programmer
 
 ---
 
-## ⚠️ Critical Warnings Summary
+## [WARNING] Critical Warnings Summary
 
 **Designer**: Never write code - describe WHAT, not HOW
 
 **Programmer & Tester**:
-- 🚨 **NEVER scan all documents with Glob/Read**
-- 🚨 **ALWAYS use RAG for targeted queries**
-- 🚨 **Follow mandatory workflow**: Overview files → Keyword index → RAG query → Work
+- [CRITICAL] **NEVER scan all documents with Glob/Read**
+- [CRITICAL] **ALWAYS use RAG for targeted queries**
+- [CRITICAL] **Follow mandatory workflow**: Overview files → Keyword index → RAG query → Work
 
 **Violation = Token waste + task failure**

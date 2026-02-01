@@ -1,6 +1,6 @@
 # Programmer Role Guide
 
-## 🎯 Role Responsibilities
+## [TARGET] Role Responsibilities
 
 Programmer is responsible for technical implementation of game features.
 
@@ -18,16 +18,16 @@ Programmer is responsible for technical implementation of game features.
 
 ---
 
-## ⚠️ CRITICAL: Mandatory Document Access Workflow
+## [CRITICAL]: Mandatory Document Access Workflow
 
-### 🚨🚨🚨 READ THIS BEFORE STARTING ANY WORK 🚨🚨🚨
+### [CRITICAL][CRITICAL][CRITICAL] READ THIS BEFORE STARTING ANY WORK [CRITICAL][CRITICAL][CRITICAL]
 
 **FORBIDDEN ACTIONS**:
-- ❌ **NEVER** use `Glob` to scan all markdown files
-- ❌ **NEVER** use `Read` to recursively read all design documents
-- ❌ **NEVER** attempt to "review all documentation" or "familiarize with all docs"
-- ❌ **NEVER** think "let me check what docs exist before starting"
-- ❌ **NEVER** create code files outside `code/` directory
+- [FORBIDDEN] **NEVER** use `Glob` to scan all markdown files
+- [FORBIDDEN] **NEVER** use `Read` to recursively read all design documents
+- [FORBIDDEN] **NEVER** attempt to "review all documentation" or "familiarize with all docs"
+- [FORBIDDEN] **NEVER** think "let me check what docs exist before starting"
+- [FORBIDDEN] **NEVER** create code files outside `code/` directory
 
 **VIOLATION CONSEQUENCES**:
 - Waste 100,000+ tokens reading unnecessary content
@@ -37,14 +37,14 @@ Programmer is responsible for technical implementation of game features.
 
 ---
 
-### ✅ MANDATORY FIRST STEPS (Follow This Exact Sequence)
+### [OK] MANDATORY FIRST STEPS (Follow This Exact Sequence)
 
 #### Step 1: Understand Project Context
 
 Read these files ONLY - no exceptions:
 
 ```bash
-1. Read PROJECT_PROGRESS.md                      # ⭐ Start here!
+1. Read PROJECT_PROGRESS.md                      # [IMPORTANT] Start here!
 2. Read docs/游戏大纲_v*.md (latest version)     # Game vision, core features
 3. Read docs/模块拆解_v*.md (latest version)     # Module structure, priorities
 ```
@@ -58,7 +58,7 @@ Glob: docs/模块拆解_v*.md  # e.g., 模块拆解_v1.md, 模块拆解_v2.md - 
 
 **Purpose**: Understand the big picture and find your next task
 
-**📖 How to Read PROJECT_PROGRESS.md**:
+**[REFERENCE] How to Read PROJECT_PROGRESS.md**:
 
 1. **Check "整体进度"** (Overall Progress)
    - Confirm current development phase
@@ -95,86 +95,14 @@ From PROJECT_PROGRESS.md:
 Your action: Copy "跳跃,重力,二段跳" → Use in RAG query
 ```
 
-#### Step 2: Check RAG Setup Status (Before Implementation)
-
-⚠️ **IMPORTANT**: Before starting any implementation, check if RAG is set up.
-
-**Check if RAG exists**:
-
-```bash
-# Quick check (Windows/Linux/macOS)
-python rag/scripts/rag_utils.py check
-```
-
-**Or check manually**:
-- Windows: `Test-Path rag/chroma_db`
-- Linux/macOS: `test -d rag/chroma_db`
-
----
-
-### Scenario A: RAG Already Exists ✅
-
-Great! Proceed to **Step 3: Identify Specific Task**.
-
----
-
-### Scenario B: RAG Does NOT Exist ⚠️
-
-**⚠️ CRITICAL**: Must ask user to choose RAG option BEFORE proceeding!
-
-**Unless user has already specified RAG option, MUST ask:**
-
-```
-⚠️ 检测到RAG系统尚未配置
-
-RAG系统用于高效访问设计文档，节省80-90%的token消耗。
-在开始实现之前，需要先配置RAG系统。
-
-请选择RAG embedding方案：
-
-【方案1：智谱AI Embedding-3】（强烈推荐）
-✅ 优点：
-  - 精度高、中文优化、云服务
-  - 稳定可靠，无需下载模型
-  - 速度快（云端处理）
-❌ 缺点：
-  - 需要API密钥
-  - 成本：~0.01元/月（15万字文档）
-📋 需要：智谱API密钥
-
-【方案2：Sentence-Transformers】（免费，但可能有网络问题）
-✅ 优点：
-  - 完全免费、离线可用、隐私安全
-❌ 缺点：
-  - ⚠️ 首次运行需下载模型（~200MB）
-  - ⚠️ 如果网络不稳定可能下载失败
-  - 精度稍低、需本地计算
-  - 首次建立索引较慢
-📋 需要：无（但需要稳定的网络连接下载模型）
-
-🔧 推荐选择：方案1（智谱AI），更稳定可靠
-
-请选择方案（1/2）：
-```
-
-**After user chooses**:
-
-- **方案1**: Guide user to run `python rag/scripts/rag_utils.py setup_zhipu`
-- **方案2**: Warn user about network issues, then guide to run `python rag/scripts/rag_utils.py setup_st`
-  - If setup fails due to network, suggest switching to 方案1
-
-**Only after RAG is successfully built**, proceed to Step 3.
-
----
-
-#### Step 3: Identify Specific Task
+#### Step 2: Identify Specific Task
 
 From PROJECT_PROGRESS.md, identify:
 - Which module/system to implement
 - Current phase status
 - Task dependencies
 
-#### Step 4: Use Keyword Index (Navigation)
+#### Step 3: Use Keyword Index (Navigation)
 
 ```bash
 # Read the keyword index to discover relevant systems
@@ -186,19 +114,19 @@ Read: rag/关键词索引.md
 # - Query examples
 ```
 
-⚠️ **CRITICAL WARNING**:
-- ✅ Use the index ONLY to extract keywords for RAG queries
-- ❌ **DO NOT read any documents listed in the index**
-- ❌ **DO NOT attempt to read detailed design documents directly**
-- ❌ **DO NOT use document paths shown in RAG results as an invitation to read them**
+[WARNING] **CRITICAL WARNING**:
+- [OK] Use the index ONLY to extract keywords for RAG queries
+- [FORBIDDEN] **DO NOT read any documents listed in the index**
+- [FORBIDDEN] **DO NOT attempt to read detailed design documents directly**
+- [FORBIDDEN] **DO NOT use document paths shown in RAG results as an invitation to read them**
 
 **Why This Matters**:
 When RAG returns chunks like `[Chunk 1] 来源: docs\模块拆解_v2.md`, the path is **FOR REFERENCE ONLY**. Do NOT respond with "Let me read the full document from docs\模块拆解_v2.md". Instead:
-- ✅ Query RAG again with different keywords if you need more details
-- ✅ Ask the Designer for clarification if RAG doesn't provide enough information
-- ❌ NEVER read the source document directly
+- [OK] Query RAG again with different keywords if you need more details
+- [OK] Ask the Designer for clarification if RAG doesn't provide enough information
+- [FORBIDDEN] NEVER read the source document directly
 
-#### Step 5: Query RAG for Detailed Requirements
+#### Step 4: Query RAG for Detailed Requirements
 
 ```python
 # Query RAG with targeted keywords ONLY
@@ -234,7 +162,7 @@ print(result.stdout)  # This prevents encoding issues (乱码)
 
 **Note**: The query scripts already handle UTF-8 encoding automatically. If you see garbled text, it may indicate other issues.
 
-#### Step 6: Check for Configuration Tables
+#### Step 5: Check for Configuration Tables
 
 After querying RAG for design specs, check if there are related configuration tables:
 
@@ -252,7 +180,7 @@ Configuration tables (`planner_config/`) contain numeric parameters and game dat
 
 Configuration tables are stored as **CSV files** in `planner_config/`.
 
-**Option 1: Use the config_loader.py utility** (Recommended ⭐)
+**Option 1: Use the config_loader.py utility** (Recommended [IMPORTANT])
 
 A ready-to-use configuration loading tool is available at `scripts/config_loader.py`.
 
@@ -348,17 +276,17 @@ Parse CSV into Python structures (using config_loader.py)
 Implement feature using config data
 ```
 
-**⚠️ IMPORTANT**:
-- ✅ Config tables are CSV files in `planner_config/` (no subdirectory)
-- ✅ Use UTF-8 encoding when reading
-- ✅ First row is column names, data starts from row 2
-- ✅ Percentages stored as decimals (0.05 = 5%)
-- ✅ Load once at game initialization
-- ✅ **Design documents** → Use RAG queries (large text)
-- ✅ **Config data** → Load CSV directly (numeric data)
-- ✅ Use `scripts/config_loader.py` for consistent loading pattern
+**[WARNING] IMPORTANT**:
+- [OK] Config tables are CSV files in `planner_config/` (no subdirectory)
+- [OK] Use UTF-8 encoding when reading
+- [OK] First row is column names, data starts from row 2
+- [OK] Percentages stored as decimals (0.05 = 5%)
+- [OK] Load once at game initialization
+- [OK] **Design documents** → Use RAG queries (large text)
+- [OK] **Config data** → Load CSV directly (numeric data)
+- [OK] Use `scripts/config_loader.py` for consistent loading pattern
 
-#### Step 7: Implement Based on Retrieved Chunks
+#### Step 6: Implement Based on Retrieved Chunks
 
 - Use the retrieved chunks as your ONLY requirement source
 - Load CSV config files for numeric parameters
@@ -378,14 +306,14 @@ RAG查询 (详细需求)
 
 ---
 
-## 🚨 FINAL REMINDER BEFORE PROCEEDING
+## [CRITICAL] FINAL REMINDER BEFORE PROCEEDING
 
 **You MUST have completed these steps BEFORE implementation**:
-1. ✅ Read PROJECT_PROGRESS.md
-2. ✅ Read docs/游戏大纲_v*.md (latest version)
-3. ✅ Read docs/模块拆解_v*.md (latest version)
-4. ✅ Read rag/关键词索引.md
-5. ✅ Used RAG to query specific requirements
+1. [OK] Read PROJECT_PROGRESS.md
+2. [OK] Read docs/游戏大纲_v*.md (latest version)
+3. [OK] Read docs/模块拆解_v*.md (latest version)
+4. [OK] Read rag/关键词索引.md
+5. [OK] Used RAG to query specific requirements
 
 **If you skipped ANY of these, STOP and complete them NOW.**
 
@@ -415,7 +343,7 @@ Choose appropriate engine/framework based on requirements:
 
 ### Step 3: Architecture Design
 
-**⚠️ CRITICAL: Code structure MUST mirror YOUR actual `docs/模块拆解_v1.md`**
+**[CRITICAL]: Code structure MUST mirror YOUR actual `docs/模块拆解_v1.md`**
 
 **Do NOT use a fixed template** - Read your module breakdown and create matching code directories dynamically.
 
@@ -470,11 +398,11 @@ code/
 - Always add `code/common/` for shared utilities
 - Add `code/tests/` for test organization
 
-**⚠️ WRONG**:
+**[WARNING] WRONG**:
 - Using a fixed template without reading `模块拆解_v1.md`
 - Creating directories that don't exist in your design docs
 
-**✅ RIGHT**:
+**[OK] RIGHT**:
 - Read actual breakdown document
 - Create only the directories that match YOUR modules
 - One-to-one mapping from docs to code
@@ -483,25 +411,25 @@ code/
 - Consider performance implications
 - Document architectural decisions
 
-### ⚠️ CRITICAL: Code File Placement Rules
+### [CRITICAL]: Code File Placement Rules
 
-**🚨 MANDATORY: ALL code files MUST be in `code/` directory**
+**[CRITICAL] MANDATORY: ALL code files MUST be in `code/` directory**
 
 **Examples of CORRECT placement**:
 ```
-✅ code/main.py              # Game entry point
-✅ code/config.py           # Configuration
-✅ code/settings.py        # Settings
-✅ code/constants.py        # Constants
-✅ code/utils/             # Utility modules
-✅ code/gameplay/main.py   # Module-specific entry
+[OK] code/main.py              # Game entry point
+[OK] code/config.py           # Configuration
+[OK] code/settings.py        # Settings
+[OK] code/constants.py        # Constants
+[OK] code/utils/             # Utility modules
+[OK] code/gameplay/main.py   # Module-specific entry
 ```
 
 **Examples of WRONG placement**:
 ```
-❌ main.py                 # ❌ WRONG! In project root
-❌ config.py              # ❌ WRONG! In project root
-❌ code/../utils.py        # ❌ WRONG! Outside code/
+[FORBIDDEN] main.py                 # [FORBIDDEN] WRONG! In project root
+[FORBIDDEN] config.py              # [FORBIDDEN] WRONG! In project root
+[FORBIDDEN] code/../utils.py        # [FORBIDDEN] WRONG! Outside code/
 ```
 
 **When creating entry files**:
@@ -519,9 +447,9 @@ code/
 
 ### Step 4: Implement by Priority
 
-**⚠️ MANDATORY PROGRESS UPDATE RULE**
+**[WARNING] MANDATORY PROGRESS UPDATE RULE**
 
-**🚨 CRITICAL: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING ANY TASK**
+**[CRITICAL] CRITICAL: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING ANY TASK**
 
 **After completing ANY task**, you MUST:
 
@@ -539,18 +467,18 @@ code/
    - 架构/实现/测试状态: ⏸️ → ⏸️
    ```
 
-**❌ FORBIDDEN**:
-- ❌ Say "implementation is complete" without updating PROJECT_PROGRESS.md
-- ❌ Move to next task before updating current task status
-- ❌ Say "I'll update progress later"
-- ❌ Expect Tester or others to update your progress
+**[FORBIDDEN] FORBIDDEN**:
+- [FORBIDDEN] Say "implementation is complete" without updating PROJECT_PROGRESS.md
+- [FORBIDDEN] Move to next task before updating current task status
+- [FORBIDDEN] Say "I'll update progress later"
+- [FORBIDDEN] Expect Tester or others to update your progress
 
-**✅ REQUIRED**:
-- ✅ Update progress IMMEDIATELY after each task completion
-- ✅ This is YOUR responsibility as Programmer
-- ✅ Task is NOT considered complete until PROJECT_PROGRESS.md is updated
+**[OK] REQUIRED**:
+- [OK] Update progress IMMEDIATELY after each task completion
+- [OK] This is YOUR responsibility as Programmer
+- [OK] Task is NOT considered complete until PROJECT_PROGRESS.md is updated
 
-**⚠️ CRITICAL: Follow Module-Based Priority Order**
+**[CRITICAL]: Follow Module-Based Priority Order**
 
 **Implementation Workflow**:
 
@@ -607,148 +535,32 @@ Your implementation order:
 
 ---
 
-## 🔧 RAG Setup (If Not Already Built)
+## [SETUP] About RAG
 
-**⚠️ CRITICAL**: RAG must be built in the **project root** where docs/ are located.
+**[WARNING] IMPORTANT**: RAG should have been set up by Document Supervisor after document review.
 
-### RAG Directory Structure
+RAG (Retrieval-Augmented Generation) enables efficient document access:
+- **Saves 80-90% tokens** compared to reading all documents
+- Document Supervisor builds RAG after approving design documents
+- Programmer queries RAG for specific requirements
 
-Your project should have this structure:
+### If RAG Does Not Exist
 
-```
-your-game-project/
-├── docs/                    # Design documents
-├── rag/                     # ⭐ RAG directory (create here)
-│   ├── scripts/             # RAG scripts (copy from skill)
-│   │   ├── rag_setup_zhipu.py
-│   │   ├── rag_setup_st.py
-│   │   ├── rag_query.py
-│   │   ├── rag_query_st.py
-│   │   ├── rag_update_zhipu.py
-│   │   ├── rag_update_st.py
-│   │   └── update_keyword_index.py
-│   ├── chroma_db/           # Vector database (auto-created)
-│   ├── .env                 # ZhipuAI API key (for ZhipuAI option)
-│   └── 关键词索引.md         # Keyword index (auto-generated)
-├── PROJECT_PROGRESS.md
-└── SKILL.md
-```
-
-### Setup Steps
-
-1. **Copy RAG scripts from skill to your project**:
-
-   **Windows (PowerShell)**:
-   ```powershell
-   mkdir rag\scripts
-   copy C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts\* rag\scripts\
-   ```
-
-   **Windows (cmd)**:
-   ```cmd
-   mkdir rag\scripts
-   xcopy /E /I C:\Users\YourName\.claude\skills\ai_game_creator_skill\rag\scripts rag\scripts
-   ```
-
-   **Linux/macOS**:
-   ```bash
-   mkdir -p rag/scripts
-   cp -r ~/.claude/skills/ai_game_creator_skill/rag/scripts/* rag/scripts/
-   ```
-
-   **Note**: Adjust the skill path `C:\Users\YourName\.claude\skills\ai_game_creator_skill` to your actual skill location.
-
-2. **Choose embedding option and build**:
-
-   **Option 1: ZhipuAI (Recommended)**
-   ```bash
-   # Create API key file
-   echo "ZHIPUAI_API_KEY=your_key_here" > rag/.env
-
-   # Build RAG index
-   python rag/scripts/rag_setup_zhipu.py
-
-   # Generate keyword index
-   python rag/scripts/update_keyword_index.py
-   ```
-
-   **Option 2: Sentence-Transformers (Free)**
-   ```bash
-   # Build RAG index (first run downloads ~400MB model)
-   python rag/scripts/rag_setup_st.py
-
-   # Generate keyword index
-   python rag/scripts/update_keyword_index.py
-   ```
-
-3. **Verify RAG is working and check encoding**:
-   ```bash
-   # Test with a Chinese keyword from your documents
-   python rag/scripts/rag_query.py "伤害"  # ZhipuAI
-   # or
-   python rag/scripts/rag_query_st.py "伤害"  # Sentence-Transformers
-   ```
-
-   **⚠️ CRITICAL: Check output**:
-   - ✅ If you see **normal Chinese text** → RAG is working correctly
-   - ❌ If you see **garbled text (乱码)** or error messages:
-     - Check that your console supports UTF-8
-     - Ensure RAG was built successfully
-     - Try running the query again
-
-   **Why this matters**:
-   - Test now to avoid problems during implementation
-   - The query scripts already handle UTF-8 encoding automatically
-
----
-
-## 🔧 When RAG is NOT Available
-
-**⚠️ Cross-platform solution** (Recommended - works on Windows, Linux, macOS):
-
+**Quick check**:
 ```bash
-# Check if RAG exists
 python rag/scripts/rag_utils.py check
-
-# Build RAG (choose one)
-python rag/scripts/rag_utils.py setup_zhipu    # ZhipuAI
-python rag/scripts/rag_utils.py setup_st       # Sentence-Transformers
 ```
 
-**Or use platform-specific commands**:
+**If RAG is missing**:
+- Remind user that Document Supervisor should set up RAG after document review
+- For very small projects (≤5 documents only), you may read documents selectively
+- For larger projects, **MUST use RAG** - reading all documents is prohibited due to token inefficiency
 
-**Check if RAG exists**:
-
-**Windows (PowerShell)**:
-```powershell
-if (Test-Path rag/chroma_db) { Write-Host "RAG exists" } else { Write-Host "RAG not found" }
-```
-
-**Windows (cmd)**:
-```cmd
-if exist rag\chroma_db (echo RAG exists) else (echo RAG not found)
-```
-
-**Linux/macOS**:
-```bash
-test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
-```
-
-### If RAG does NOT exist
-
-1. **For projects with >5 documents**: MUST build RAG first (see setup above)
-2. **For very small projects (≤5 documents ONLY)**: You may read documents selectively
-   - Read docs/游戏大纲_v*.md (latest version)
-   - Read docs/模块拆解_v*.md (latest version)
-   - Read ONLY the specific system document you need to implement
-   - DO NOT use Glob to scan all documents
-   - DO NOT read documents unrelated to your current task
-
-**WARNING**: Reading all documents without RAG is prohibited for medium-to-large projects (>10 documents) due to token inefficiency.
+**RAG setup instructions**: See document_supervisor.md Step 5 or SKILL.md RAG Integration section
 
 ---
 
-## 💻 Code Quality Standards
+## [PROGRAMMER] Code Quality Standards
 
 - Follow language/framework conventions
 - Add comments for complex logic
@@ -770,7 +582,7 @@ test -d rag/chroma_db && echo "RAG exists" || echo "RAG not found"
 
 ---
 
-## 💡 Work Principles
+## [PRINCIPLE] Work Principles
 
 1. **Follow specs** - Implement exactly as designed, avoid scope creep
 2. **RAG-first** - Always use RAG queries, never scan all docs

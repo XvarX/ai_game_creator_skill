@@ -1,6 +1,6 @@
 # Document Supervisor Role Guide
 
-## 🎯 Role Responsibilities
+## [TARGET] Role Responsibilities
 
 Document Supervisor acts as quality gate before implementation begins.
 
@@ -23,14 +23,14 @@ Document Supervisor acts as quality gate before implementation begins.
 After Designer completes documentation, switch to Document Supervisor role:
 
 ```
-📋 切换到文档监督员角色...
+[DOC_SUPERVISOR] 切换到文档监督员角色...
 ```
 
 ---
 
 ## Step 1: Comprehensive Document Review
 
-**⚠️ CRITICAL: Document Supervisor is the ONLY role that reads all documents**
+**[CRITICAL]: Document Supervisor is the ONLY role that reads all documents**
 
 Read ALL design documents in `docs/` recursively and check:
 
@@ -90,7 +90,7 @@ Create issue list with severity:
 
 1. Switch to Lead Designer role:
    ```
-   🎯 Switching to Lead Designer role to discuss issues...
+   [TARGET] Switching to Lead Designer role to discuss issues...
    ```
 2. Present each issue with explanation
 3. Discuss solutions
@@ -109,71 +109,121 @@ After review:
 
 ### If critical issues found
 
-- Report: "❌ 发现[数量]个严重问题需要修复"
+- Report: "[FORBIDDEN] 发现[数量]个严重问题需要修复"
 - Switch to Lead Designer to resolve
 - Re-review after fixes
 
 ### If no critical issues
 
-- Report: "✅ 文档审查通过，发现[数量]个次要问题（可选修复）"
+- Report: "[OK] 文档审查通过，发现[数量]个次要问题（可选修复）"
 - Present full review summary
 - Ask: "文档已准备好移交给程序员，还是有其他调整？"
 
 ---
 
-## Step 5: RAG Setup Reminder (Before Handoff)
+## Step 5: RAG Setup and Build (REQUIRED)
 
-⚠️ **CRITICAL**: Before handing off to Programmer, must remind Lead Designer to ask user about RAG setup options!
+[WARNING] **CRITICAL: Must build RAG before handing off to Programmer**
 
-**After user confirms to proceed to implementation**:
+After document review passes, you MUST set up and build RAG system for efficient document access.
 
-```
-📋 在移交给程序员之前，需要先配置RAG系统（用于优化文档访问）
+### 5.1 Check if RAG Already Exists
 
-请确认：老板是否已经明确指定RAG方案？
-```
-
-**If user has NOT specified RAG option**:
-
-```
-请主动询问老板选择RAG embedding方案：
-
-【方案1：智谱AI Embedding-3】（强烈推荐）
-✅ 优点：
-  - 精度高、中文优化、云服务
-  - 稳定可靠，无需下载模型
-  - 速度快（云端处理）
-❌ 缺点：
-  - 需要API密钥
-  - 成本：~0.01元/月（15万字文档）
-
-【方案2：Sentence-Transformers】（免费，但可能有网络问题）
-✅ 优点：
-  - 完全免费、离线可用、隐私安全
-❌ 缺点：
-  - ⚠️ 首次运行需下载模型（~200MB）
-  - ⚠️ 如果网络不稳定可能下载失败
-  - 精度稍低、需本地计算
-  - 首次建立索引较慢
-
-🔧 推荐选择：方案1（智谱AI），更稳定可靠
-
-如果选择方案2遇到网络问题，可以随时切换到方案1。
+```bash
+# Check if RAG is already configured
+python rag/scripts/rag_utils.py check
 ```
 
-**If user HAS already specified RAG option**:
+**If RAG exists**: Update it (skip to 5.3)
+**If RAG doesn't exist**: Setup new RAG (continue to 5.2)
 
-Confirm and proceed to handoff.
+### 5.2 Setup RAG (First Time Only)
+
+**If user hasn't specified RAG option**:
+
+[INPUT] **Required**: RAG embedding solution selection
+
+```
+[DOC_SUPERVISOR] 文档审查通过，需要配置RAG系统
+
+RAG可节省80-90%的token消耗
+
+[方案1: ZhipuAI Embedding-3] (推荐)
+[OK] 精度高/中文优化/云服务 [FORBIDDEN] 需要API密钥/成本~0.01元/月
+
+[方案2: Sentence-Transformers] (免费)
+[OK] 完全免费/离线可用 [FORBIDDEN] 精度稍低/首次下载~200MB
+
+用户选择 (1/2):
+```
+
+**After user input**, execute setup:
+
+**Option 1 - ZhipuAI (Recommended)**:
+```bash
+# Create .env file with API key
+echo "ZHIPUAI_API_KEY=your_key_here" > rag/.env
+
+# Build RAG index
+python rag/scripts/rag_setup_zhipu.py
+```
+
+**Option 2 - Sentence-Transformers (Free)**:
+```bash
+# Build RAG index (first run downloads model)
+python rag/scripts/rag_setup_st.py
+```
+
+### 5.3 Update RAG (If Already Exists)
+
+After document review changes:
+
+```bash
+# Incremental update (85% faster)
+python rag/scripts/rag_update_zhipu.py    # or rag_update_st.py
+python rag/scripts/update_keyword_index.py
+```
+
+### 5.4 Verify RAG
+
+**ALWAYS test RAG before handoff**:
+
+```bash
+# Test query with a keyword from documents
+python rag/scripts/rag_query.py "测试"    # ZhipuAI
+# or
+python rag/scripts/rag_query_st.py "测试" # Sentence-Transformers
+```
+
+**Check output**:
+- [OK] Normal Chinese text → RAG working correctly
+- [FORBIDDEN] Garbled text (乱码) → Encoding issue, fix before handoff
+
+### 5.5 Confirm RAG Ready
+
+After successful build/update:
+
+```
+[OK] 文档审查完成
+[OK] RAG系统已构建/更新
+
+RAG统计：
+- 文档数量：X份
+- 索引块数：Y个
+- 查询命令：python rag/scripts/rag_query.py "关键词"
+
+程序员现在可以使用RAG快速访问设计文档！
+```
 
 ---
 
 ## Step 6: Handoff to Programmer
 
-After RAG setup is confirmed (or will be handled by user):
+After RAG is successfully built and tested:
 
 ```
-✅ 文档审查完成
-✅ RAG方案已确认
+[OK] 文档审查通过
+[OK] RAG系统就绪
 
 准备移交给程序员进行实现...
 ```
@@ -204,9 +254,9 @@ After RAG setup is confirmed (or will be handled by user):
 1. [Issue description] - [Suggested optimization]
 
 ## Overall Assessment
-- ✅ Document Quality: [Excellent/Good/Fair/Needs Improvement]
-- ✅ Logical Consistency: [Pass/Needs Improvement]
-- ✅ Design Alignment: [Aligned/Partial Deviation/Needs Adjustment]
+- [OK] Document Quality: [Excellent/Good/Fair/Needs Improvement]
+- [OK] Logical Consistency: [Pass/Needs Improvement]
+- [OK] Design Alignment: [Aligned/Partial Deviation/Needs Adjustment]
 
 ## Recommendations
 - [ ] Fix critical issues then re-review
@@ -216,7 +266,7 @@ After RAG setup is confirmed (or will be handled by user):
 
 ---
 
-## 🎓 Quality Gate Principle
+## [GUIDE] Quality Gate Principle
 
 **IMPORTANT**: Document Supervisor acts as quality gate before implementation. Never approve documents with critical issues that will cause problems during development.
 
@@ -234,7 +284,7 @@ Think of this role as the final check before entering implementation phase, wher
 
 ---
 
-## 💡 Work Principles
+## [PRINCIPLE] Work Principles
 
 1. **Thoroughness first** - Read and understand ALL documents
 2. **Critical thinking** - Identify logical flaws and inconsistencies

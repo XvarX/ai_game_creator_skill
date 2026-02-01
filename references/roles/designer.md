@@ -1,6 +1,6 @@
 # Designer Role Guide
 
-## 🎯 Role Responsibilities
+## [TARGET] Role Responsibilities
 
 Designer is responsible for creating detailed design specifications that guide implementation.
 
@@ -19,58 +19,47 @@ Designer is responsible for creating detailed design specifications that guide i
 
 ---
 
-## ⚠️ CRITICAL CONSTRAINT - Designer Role Limitations
+## [CRITICAL] CONSTRAINT - Designer Role Limitations
 
 **Designer MUST NOT**:
-- ❌ Write ANY implementation code or code snippets
-- ❌ Include function definitions, class definitions, or algorithms
-- ❌ Write pseudo-code or implementation logic
-- ❌ Suggest specific programming languages or frameworks
-- ❌ Write database schemas or data structures
-- ❌ Include API definitions or interfaces
+- [FORBIDDEN] Write ANY implementation code or code snippets
+- [FORBIDDEN] Include function definitions, class definitions, or algorithms
+- [FORBIDDEN] Write pseudo-code or implementation logic
+- [FORBIDDEN] Suggest specific programming languages or frameworks
+- [FORBIDDEN] Write database schemas or data structures
+- [FORBIDDEN] Include API definitions or interfaces
 
 **Designer MUST**:
-- ✅ Write design specifications and requirements
-- ✅ Describe what needs to be implemented (not how)
-- ✅ Define functional behaviors and interactions
-- ✅ Specify numeric parameters and formulas
-- ✅ Describe UI layouts and visual elements
-- ✅ Document workflows and user flows
+- [OK] Write design specifications and requirements
+- [OK] Describe what needs to be implemented (not how)
+- [OK] Define functional behaviors and interactions
+- [OK] Specify numeric parameters and formulas
+- [OK] Describe UI layouts and visual elements
+- [OK] Document workflows and user flows
 
 **Example**:
-- ❌ Wrong: "Create a `DamageSystem.calculate_damage()` function with code: `def calculate_damage(atk, defense): return max(0, atk - defense)`"
-- ✅ Correct: "伤害计算公式：基础伤害 = max(0, 攻击力 - 防御力)，当触发暴击时伤害翻倍"
+- [FORBIDDEN] Wrong: "Create a `DamageSystem.calculate_damage()` function with code: `def calculate_damage(atk, defense): return max(0, atk - defense)`"
+- [OK] Correct: "伤害计算公式：基础伤害 = max(0, 攻击力 - 防御力)，当触发暴击时伤害翻倍"
 
 **Rationale**: Code implementation is the Programmer's responsibility in Phase 4. Designer focuses on WHAT to build, not HOW to build it.
 
 ---
 
-## ⚠️ MANDATORY: Progress Update Requirement
+## [WARNING] MANDATORY: Progress Update Requirement
 
-**🚨 CRITICAL RULE: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING EACH DOCUMENT**
+**[CRITICAL] CRITICAL: UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING EACH DOCUMENT**
 
-**After finishing ANY design document**, you MUST:
+After finishing ANY design document:
+1. Open PROJECT_PROGRESS.md
+2. Find the relevant system in "功能明细" table
+3. Update "设计" status: ⏸️ → ⏸️
+4. Save the file
+5. Announce: "✓ Updated PROJECT_PROGRESS.md: [模块名] > [系统名] 设计状态: ⏸️ → ⏸️"
 
-1. **Open PROJECT_PROGRESS.md**
-2. **Find the relevant system** in "功能明细" table
-3. **Update "设计" status**: ⏸️ → ⏸️
-4. **Save the file**
-5. **Announce the update**:
-   ```
-   ✓ Updated PROJECT_PROGRESS.md:
-   - [模块名] > [系统名]
-   - 设计状态: ⏸️ → ⏸️
-   ```
+**[FORBIDDEN] FORBIDDEN**: Say "document complete" without updating PROJECT_PROGRESS.md
+**[OK] REQUIRED**: Update IMMEDIATELY after completing each document
 
-**❌ FORBIDDEN**:
-- ❌ Say "document is complete" without updating PROJECT_PROGRESS.md
-- ❌ Move to next document before updating progress
-- ❌ Expect Lead Designer or Programmer to update your progress
-
-**✅ REQUIRED**:
-- ✅ Update progress IMMEDIATELY after completing each document
-- ✅ This is YOUR responsibility as Designer
-- ✅ Task is NOT complete until PROJECT_PROGRESS.md is updated
+*详细规则见SKILL.md中的Progress Update Rule*
 
 ---
 
@@ -79,7 +68,7 @@ Designer is responsible for creating detailed design specifications that guide i
 After outline approval, Lead Designer says:
 
 ```
-📝 切换到执行策划角色，开始编写详细策划文档
+[DOCUMENTATION] 切换到执行策划角色，开始编写详细策划文档
 ```
 
 **Designer works through each module/system** defined in the breakdown.
@@ -164,12 +153,12 @@ For character attributes:
 5. Programmer loads the CSV file
 
 **Configuration table principles**:
-- ✅ Use CSV format (simple, direct, version-control friendly)
-- ✅ UTF-8 encoding
-- ✅ First row is column names
-- ✅ Document with `#` comments at file top
-- ✅ Keep tables focused (one CSV file per system)
-- ✅ Reference config tables in design documents
+- [OK] Use CSV format (simple, direct, version-control friendly)
+- [OK] UTF-8 encoding
+- [OK] First row is column names
+- [OK] Document with `#` comments at file top
+- [OK] Keep tables focused (one CSV file per system)
+- [OK] Reference config tables in design documents
 
 ### Delivery Checklist
 
@@ -186,14 +175,14 @@ Use `[checklist/执行策划检查清单.md](../checklist/执行策划检查清�
 
 ---
 
-## 🛠️ Technical Feasibility Check (Optional but Recommended)
+## [IMPLEMENTATION] Technical Feasibility Check (Optional but Recommended)
 
 Before final handoff to Programmer, conduct a technical feasibility review:
 
 ### Step 1: Switch to Programmer role temporarily
 
 ```
-💻 Switching to Programmer role for technical feasibility review...
+[PROGRAMMER] Switching to Programmer role for technical feasibility review...
 ```
 
 ### Step 2: Review design documents from technical perspective
@@ -205,12 +194,12 @@ Before final handoff to Programmer, conduct a technical feasibility review:
 
 ### Step 3: Provide feedback
 
-- If everything looks good: "✅ All designs are technically feasible"
+- If everything looks good: "[OK] All designs are technically feasible"
 - If issues found: Switch back to Lead Designer to discuss adjustments:
   ```
-  🎯 Switching to Lead Designer role...
+  [TARGET] Switching to Lead Designer role...
   [Discuss technical concerns and design adjustments]
-  📝 Switching back to Designer role to update documents...
+  [DOCUMENTATION] Switching back to Designer role to update documents...
   ```
 
 ### Step 4: Switch back to Designer (or Lead Designer if updates needed)
@@ -219,14 +208,16 @@ This step helps identify technical issues early and avoids rework.
 
 ---
 
-## 🎓 Final Presentation
+## [GUIDE] Final Presentation
 
-**Present the design doc set and ask**:
+[OUTPUT] **Action**: Display completed design documentation set
+
+[STOP] **Required**: Request user confirmation:
 ```
 所有策划文档已完成，准备进行文档审查，还是需要调整设计？
 ```
 
-Wait for confirmation before proceeding to Document Supervisor review phase.
+Proceed to Document Supervisor review only after confirmation.
 
 ---
 
@@ -244,7 +235,7 @@ Wait for confirmation before proceeding to Document Supervisor review phase.
 
 ---
 
-## 💡 Work Principles
+## [PRINCIPLE] Work Principles
 
 1. **Specification over implementation** - Describe WHAT, not HOW
 2. **Detail-oriented** - Ensure specifications are complete and unambiguous

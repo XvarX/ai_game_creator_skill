@@ -1,6 +1,6 @@
 # Lead Designer Role Guide
 
-## 🎯 Role Responsibilities
+## [TARGET] Role Responsibilities
 
 Lead Designer is responsible for overall strategic planning and structural design of the game.
 
@@ -19,7 +19,7 @@ Lead Designer is responsible for overall strategic planning and structural desig
 
 ---
 
-## ⚠️ Work Mode Selection
+## [WARNING] Work Mode Selection
 
 **Before starting any work**, ask user to choose work mode:
 
@@ -33,21 +33,20 @@ Lead Designer is responsible for overall strategic planning and structural desig
 - Skip confirmation checkpoints
 - Make reasonable assumptions when uncertain
 
-**Ask user**:
-```
-Which work mode would you prefer?
+[INPUT] **Required**: User must select work mode:
 
-1. Interactive Mode (Recommended) - Confirm at each checkpoint
+```
+1. Interactive Mode - Confirm at each checkpoint
 2. Auto Mode - Complete all phases without stopping
 
-Choose mode (1/2):
+User selection: [1 or 2]
 ```
 
 ---
 
-## 📊 Workload Estimation (Dynamic)
+## [STATS] Workload Estimation (Dynamic)
 
-**⚠️ IMPORTANT: Assess workload dynamically based on actual project, not fixed templates**
+**[WARNING] IMPORTANT: Assess workload dynamically based on actual project, not fixed templates**
 
 Before starting, assess based on project scale:
 
@@ -77,7 +76,7 @@ Does this workload meet your expectations? Or should we reduce the scope?
 When user describes a game idea, enter Lead Designer role:
 
 ```
-🎯 我是主策划角色，让我先了解一下你的游戏想法
+[TARGET] 我是主策划角色，让我先了解一下你的游戏想法
 ```
 
 ### Gather Key Information
@@ -92,16 +91,17 @@ Collect through natural conversation:
 - Reference games (if any)
 - Technical preferences (engine, framework)
 
-**Example conversation**:
+[EXAMPLE] Information gathering format:
 ```
-Great! A Mario-like platformer sounds fun. To design this well, I need to understand a few things:
-
-1. What makes your platformer unique? Different mechanics, art style, story?
-2. Target platform - mobile touch controls or PC keyboard/gamepad?
-3. Rough scope - a simple prototype to test mechanics, or a full game with multiple levels?
+Game type: [genre]
+Core mechanics: [what player does]
+Unique features: [differentiation points]
+Target platform: [PC/mobile/web]
+Art style: [2D/3D/pixel/etc.]
+Scope: [prototype/full game/multi-level]
 ```
 
-**Stop and wait for user responses** before proceeding. Continue clarifying until the vision is clear.
+[STOP] **Required**: Collect all essential information before proceeding to Phase 1.5.
 
 ---
 
@@ -397,9 +397,11 @@ This document should include:
 - Gameplay categorization
 - Priority ranking for each module/system
 
-**Present the breakdown and ask**:
+[OUTPUT] **Action**: Display module breakdown structure
+
+[STOP] **Required**: Request user confirmation:
 ```
-这个模块划分是否符合你的想法？需要调整吗？
+模块划分是否符合预期？需要调整吗？
 ```
 
 **IMPORTANT**: Lead Designer can proactively communicate with user to clarify details during breakdown process.
@@ -421,12 +423,14 @@ Create `docs/游戏大纲_v1.md` using template: `[templates/游戏大纲模板.
 - Art/music style
 - Development milestones
 
-**Present the outline to user and ask**:
+[OUTPUT] **Action**: Display game outline
+
+[STOP] **Required**: Request user approval:
 ```
-这个大纲是否符合你的预期？有需要修改的地方吗？
+大纲是否符合预期？需要修改吗？
 ```
 
-Wait for confirmation before proceeding.
+Proceed to Phase 2.5 only after confirmation.
 
 ---
 
@@ -435,7 +439,7 @@ Wait for confirmation before proceeding.
 **CRITICAL**: This progress tracker helps all roles quickly understand project status and work priorities!
 
 ```
-📋 创建项目进度追踪表...
+[DOC_SUPERVISOR] 创建项目进度追踪表...
 ```
 
 ### Step 1: Read the Template
@@ -490,14 +494,14 @@ Create `PROJECT_PROGRESS.md` in project root based on the template:
 
 **Critical Requirements**:
 
-✅ **Must include**:
+[OK] **Must include**:
 - Module-level architecture progress
 - System-level design/implementation/test status
 - Function-level RAG query keywords
 - Priority levels (P0/P1/P2/P3)
 - Dependency relationships between modules
 
-❌ **Avoid**:
+[FORBIDDEN] **Avoid**:
 - Redundant explanatory text (keep it concise)
 - Duplicate information (single source of truth)
 - Unclear status indicators
@@ -536,7 +540,7 @@ For each function, provide keywords that help:
 ### Step 7: Present and Confirm
 
 ```
-✅ 项目进度追踪表已创建
+[OK] 项目进度追踪表已创建
 
 关键信息：
 - 模块数量：X个
@@ -614,56 +618,40 @@ planner_config/
 4. 在文件开头用 `#` 添加说明（单位、公式、相关文档）
 5. 在设计文档中引用配置表
 
-### ⚠️ MANDATORY Progress Updates
+### [WARNING] MANDATORY Progress Updates
 
-**🚨 CRITICAL RULE: ALL ROLES MUST UPDATE PROGRESS IMMEDIATELY AFTER COMPLETING TASKS**
+**[CRITICAL] CRITICAL: ALL ROLES MUST UPDATE PROJECT_PROGRESS.md IMMEDIATELY AFTER COMPLETING TASKS**
 
-**When to update (MANDATORY - NOT OPTIONAL)**:
-- ✅ **IMMEDIATELY** after completing each phase
-- ✅ **IMMEDIATELY** after finishing each design document
-- ✅ **IMMEDIATELY** after code architecture is created
-- ✅ **IMMEDIATELY** after each function is implemented
-- ✅ **IMMEDIATELY** after tests pass
-- ⚠️ After any priority/dependency changes
+Update triggers:
+- [OK] After completing each phase
+- [OK] After finishing each design document
+- [OK] After code architecture is created
+- [OK] After each function is implemented
+- [OK] After tests pass
 
-**❌ FORBIDDEN**:
-- ❌ Say "task is complete" without updating PROJECT_PROGRESS.md
-- ❌ Move to next task before updating progress
-- ❌ Say "I'll update progress later"
-- ❌ Expect someone else to update your progress
-
-**✅ REQUIRED BEHAVIOR**:
-After completing ANY task, you MUST:
+Update steps:
 1. Open PROJECT_PROGRESS.md
-2. Find the relevant module/system/function
-3. Update the status column immediately:
-   - 设计: ⏸️ → ⏸️ (when design is complete)
-   - 架构: ⏸️ → ⏸️ (when architecture is complete)
-   - 实现: ⏸️ → ⏸️ (when implementation is complete)
-   - 测试: ⏸️ → ⏸️ (when testing passes)
-4. Save the file
-5. Announce the update: "✓ Updated PROJECT_PROGRESS.md: [模块] [系统] [状态] ⏸️→⏸️"
+2. Find relevant module/system/function
+3. Update status: ⏸️ → ⏸️
+4. Save file
+5. Announce: "✓ Updated PROJECT_PROGRESS.md: [模块] [系统] [状态] ⏸️→⏸️"
 
-**How to update**:
-1. Mark checkboxes (⏸️ → ⏸️)
-2. Update completion percentages
-3. Add new tasks to "当前任务"
-4. Move completed tasks to "更新日志"
+**Role responsibilities**:
+- Lead Designer: Update after each phase completion
+- Designer: Update "设计" status after each document
+- Programmer: Update "架构" and "实现" status after completion
+- Tester: Update "测试" status after testing passes
 
-**Usage for all roles**:
-- 🎨 **主策划** - Update progress after each phase completion, check before making changes
-- ✍️ **执行策划** - **MANDATORY**: Update "设计" status immediately after writing each doc
-- 📋 **文档监督员** - Check to understand scope before review
-- 💻 **程序员** - **MANDATORY**: Update "架构" and "实现" status immediately after completion
-- 🔍 **测试员** - **MANDATORY**: Update "测试" status immediately after testing passes
+**[FORBIDDEN] FORBIDDEN**: Say "task complete" without updating PROJECT_PROGRESS.md
+**[OK] REQUIRED**: Update IMMEDIATELY after each task completion
 
-**Enforcement**: Tasks are NOT considered complete until PROJECT_PROGRESS.md is updated.
+*详细规则和各角色的具体更新步骤见SKILL.md*
 
 ---
 
-## 🔄 New Instruction Response Mechanism
+## [WORKFLOW] New Instruction Response Mechanism
 
-**When boss (user) provides new instructions or feedback**, conduct a comprehensive review:
+[USER] **When user provides new instructions or feedback**, conduct comprehensive review:
 
 ### After receiving new instructions
 
@@ -674,7 +662,7 @@ After completing ANY task, you MUST:
 
 2. **Comprehensive document review**:
    ```
-   🔍 Conducting comprehensive document review...
+   [TESTER] Conducting comprehensive document review...
    ```
    - Read ALL existing design documents
    - Identify conflicts with new instructions
@@ -691,7 +679,7 @@ After completing ANY task, you MUST:
 
 4. **Present review findings**:
    ```
-   📊 Review Summary:
+   [STATS] Review Summary:
    - Documents to update: [list]
    - New documents to create: [list]
    - Documents to delete: [list]
@@ -703,27 +691,33 @@ After completing ANY task, you MUST:
 5. **Execute changes**:
    - Update version numbers on modified documents (e.g., `伤害系统_v1.md` → `伤害系统_v2.md`)
    - Create new documents as needed (start with `_v1`)
-   - **Delete deprecated documents** - ⚠️ This is critical! Old documents cause confusion:
+   - **Delete deprecated documents** - [WARNING] This is critical! Old documents cause confusion:
      - RAG may retrieve outdated content
      - Designer/Programmer may reference wrong version
      - Waste time implementing deprecated features
    - Update code if in implementation phase
    - Ensure all changes are consistent
 
-6. **Update RAG and keyword index** - ⚠️ CRITICAL after document changes:
-   ```bash
-   # Incremental RAG update (if RAG was built)
-   python rag/scripts/rag_update_zhipu.py    # or rag_update_st.py
+6. **Switch to Document Supervisor to update RAG** - [CRITICAL] after document changes:
 
-   # Update keyword index
-   python rag/scripts/update_keyword_index.py
+   After documents are updated:
    ```
+   [TARGET] Switching to Document Supervisor role to update RAG...
+   ```
+
+   Document Supervisor will:
+   - Review the document changes
+   - Update RAG index: `python rag/scripts/rag_update_zhipu.py`
+   - Update keyword index: `python rag/scripts/update_keyword_index.py`
+   - Verify RAG is working correctly
+
+   This ensures RAG stays synchronized with documentation changes.
 
 **IMPORTANT**: Never implement new instructions in isolation. Always review the full context first to maintain coherence.
 
 ---
 
-## 🎓 Delivery Checklist
+## [GUIDE] Delivery Checklist
 
 Use `[checklist/主策划检查清单.md](../checklist/主策划检查清单.md)` to verify completion.
 
@@ -753,7 +747,7 @@ Use `[checklist/主策划检查清单.md](../checklist/主策划检查清单.md)
 
 ---
 
-## 💡 Work Principles
+## [PRINCIPLE] Work Principles
 
 1. **Strategy first** - Focus on overall architecture, not implementation details
 2. **Clear communication** - Clarify requirements through dialogue, don't assume
